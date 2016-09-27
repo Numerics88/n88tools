@@ -11,12 +11,12 @@ setup (
                              include_dirs = [numpy.get_include()],
     	                     sources = ['extensions/finiteelementfunctions.cpp'])],
 
-    install_requires = ['numpy',
-                        'scipy'],
+    install_requires = ['numpy', 'scipy'],
 
     entry_points = {
         'console_scripts': [
             'n88coarsen = n88tools.coarsen:main',
+            'n88compress = n88tools.compress:main',
             'n88copymodel = n88tools.copymodel:main',
             'n88directmechanics = n88tools.directmechanics:main',
             'n88evaluate = n88tools.evaluate:main',
