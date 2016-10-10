@@ -46,8 +46,8 @@ def log (msg, append=False, timestamp=True):
     """Print message with time stamp.
 
     Only the first line is printed with a time stamp; subsequent lines
-    are indented but not timestamped.  If append=True, the first line is
-    also printed indented without a time stamp.  If timestamp=False, neither
+    are indented but not timestamped. If append=True, the first line is
+    also printed indented without a time stamp. If timestamp=False, neither
     a time stamp nor indentation is added to any line.
     
     If msg does not end with a line return, one is added.
