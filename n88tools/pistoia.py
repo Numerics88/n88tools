@@ -47,10 +47,10 @@ def pistoia():
         help="""Specify the constraint (i.e. boundary condition or applied load)
     to use for analysis. This is the surface to which forces are applied. The default
     ("top_displacement") will work for models generated with n88modelgenerator.""")
-                                 
+
     parser.add_argument ("--rotation_center", "-c",
         type = lambda x: numpy.fromstring(x, dtype=float, sep=","),
-        help="""Specify the spatial center used for calculation of angular 
+        help="""Specify the spatial center used for calculation of angular
     quantities. The argument must be given as a triplet of coordinates.
     The default is read from the n88model.  If not specified, either on the
     command line or in the n88model file, no angular quantities will be
@@ -79,7 +79,6 @@ def pistoia():
         out = sys.stdout
     else:
         out = open (args.output_file, "wt")
-
 
     # ------------------------------------------------------------------------
     # Get information about the n88model file
@@ -194,7 +193,7 @@ def pistoia():
                 maximum = max(x)
             # Might get warning if stddev is zero: ignore these
             with warnings.catch_warnings():
-                warnings.simplefilter("ignore")    
+                warnings.simplefilter("ignore")
                 if "skewness" in stats:
                     skewness = sum(((x-average)/std_dev)**3)/n
                 if "kurtosis" in stats:
@@ -287,7 +286,7 @@ def pistoia():
     rf_ns1 = numpy.sum(set_data, axis=0)
 
     if args.rotation_center != None:
-        
+
         # Calculate average angular rotation on specified node set.
         p = zeros (activePart.variables["NodeCoordinates"].shape, float64)
         p[:] = activePart.variables["NodeCoordinates"][:]
@@ -330,14 +329,23 @@ def pistoia():
     matNames = materialTable.variables['MaterialName'][:]
     for id,matName in zip (materialIds, matNames):
         material = materialDefinitions.groups[matName]
-        if material.Type == "LinearIsotropic":
-            modulus_value = material.E
-        elif material.Type == "LinearOrthotropic":
-            modulus_value = max(material.E)
+        if hasattr(material, 'E'):
+            if material.Type == "LinearIsotropic":
+                modulus_value = material.E
+            elif material.Type == "LinearOrthotropic":
+                modulus_value = max(material.E)
+            else:
+                raise N88ReportedError ("ERROR: Unsupported material type for Pistoia calculation: %s" % material.Type)
+            indices = numpy.nonzero(elementMaterials == id)
+            modulus[indices] = modulus_value
         else:
-            raise N88ReportedError ("ERROR: Unsupported material type for Pistoia calculation: %s" % material.Type)
-        indices = numpy.nonzero(elementMaterials == id)
-        modulus[indices] = modulus_value
+            if material.Type != "LinearIsotropic":
+                raise N88ReportedError ("ERROR: Unsupported material type for Pistoia calculation: %s" % material.Type)
+
+            modulus_values = numpy.array(material.variables['E'][:])
+            for i, E in enumerate(modulus_values):
+                indices = numpy.nonzero(elementMaterials == i)
+                modulus[indices] = E
     sed = zeros (elementValues.variables["StrainEnergyDensity"].shape, float64)
     sed[:] = elementValues.variables["StrainEnergyDensity"][:]
     if mask != None:
@@ -366,7 +374,7 @@ def pistoia():
     # (i.e. result=NAN on divide by zero instead of exception)
     # Might get warning if stddev is zero: ignore these
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")    
+        warnings.simplefilter("ignore")
         stiffness = f/u
         if args.rotation_center != None:
             torsional_stiffness = t/rot
@@ -414,18 +422,25 @@ def pistoia():
     out.write ("Distribution of failed materials.\n")
     out.write (subtable_delimiter)
     g_mat_failed = elementMaterials[sort_indices[el:]]
-    nels_failed = zeros (sizeOfMaterialTable, int)
-    for m in range(sizeOfMaterialTable):
-        nels_failed[m] = sum (g_mat_failed == materialIds[m])
+    unique_materials = numpy.unique(elementMaterials)
+    nMaterials = len(unique_materials)
+    nels_failed = zeros (nMaterials, int)
+    for i,m in enumerate(unique_materials):
+        nels_failed[i] = sum(g_mat_failed == m)
     total = sum(nels_failed)
+    #g_mat_failed = elementMaterials[sort_indices[el:]]
+    #nels_failed = zeros (len(numpy.unique(elementMaterials)), int)
+    #for i,m in enumerate(numpy.unique(elementMaterials)):
+    #    nels_failed[i] = sum (g_mat_failed == m)
+    #total = sum(nels_failed)
     col_width = 12
     left_margin = (width - 3*col_width)//2
     heading_format = " "*left_margin + ("%%%ds" % col_width)*3 + "\n"
     table_line = "-"*10
     row_format = " "*left_margin + "%%%ds" % col_width + "%%%dd" % col_width + "%%%d.2f" % col_width + "\n"
     out.write (heading_format % ("material","# els","%"))
-    for m in range(sizeOfMaterialTable):
-        out.write (row_format % (materialIds[m], nels_failed[m], numpy.float64(100)*nels_failed[m]/total))
+    for i,m in enumerate(unique_materials):
+        out.write (row_format % (m, nels_failed[i], numpy.float64(100)*nels_failed[i]/total))
     out.write (heading_format % ((table_line,)*3))
     out.write (row_format % ("total",total,100))
 
