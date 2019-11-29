@@ -3,9 +3,9 @@ pistoia.py
 
 Generate tables of standard post-processing quantities.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2013-2016, Numerics88 Solutions Ltd.
+All rights reserved.
 http://www.numerics88.com/
-See LICENSE for details.
 """
 
 from __future__ import division
@@ -64,6 +64,12 @@ def pistoia():
     parser_sets.add_argument ("--exclude", "-e",
         help="All elements with the specified material IDs will be excluded from the calculation. Multiple IDs can be specified in a comma-delimited list (e.g. 100,101,105).")
 
+    parser.add_argument ("--critical_volume", "-v", type=float, default=2.0,
+        help="Specify the fixed critical volume (as percent) (default: %(default)s)")
+
+    parser.add_argument ("--critical_strain", "-s", type=float, default=0.007,
+        help="Specify the fixed critical strain (default: %(default)s)")
+
     parser.add_argument ("model_file")
 
     args = parser.parse_args()
@@ -80,6 +86,8 @@ def pistoia():
     else:
         out = open (args.output_file, "wt")
 
+    fixed_critical_volume = args.critical_volume
+    fixed_critical_ees = args.critical_strain
 
     # ------------------------------------------------------------------------
     # Get information about the n88model file
@@ -322,9 +330,6 @@ def pistoia():
         t = torque_ns1
         rot = rot_ns1
 
-    fixed_critical_volume = 2.0
-    fixed_critical_ees = 0.007
-
     # Get typical Modulus
     modulus = zeros(numberOfElements,float)
     matNames = materialTable.variables['MaterialName'][:]
@@ -448,14 +453,11 @@ def pistoia():
     out.write (table_delimiter)
 
 
-def main():
+if __name__ == "__main__":
     try:
         pistoia()
     except N88ReportedError as e:
-        sys.stderr.write ("Error: " + e.message)
+        sys.stderr.write (e.message)
         sys.stderr.write ("\n")
         sys.exit (e.value)
     # Let other exceptions fall through to default python unhandled exception reporting.
-
-if __name__ == "__main__":
-    main()
