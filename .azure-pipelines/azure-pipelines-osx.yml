@@ -1,0 +1,44 @@
+
+jobs:
+- job: macOS
+  pool:
+    vmImage: 'macOS-latest'
+  strategy:
+    matrix:
+      Python27:
+        python.version: '2.7'
+        numpy.version: '1.16'
+  steps:
+  - bash: |
+      echo "##vso[task.prependpath]$CONDA/bin"
+      sudo chown -R $USER $CONDA
+    displayName: Add conda to path
+  - bash: |
+      sudo mkdir -p /opt/
+      sudo chown -R $USER /opt/
+      curl  -L https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.9.sdk.tar.xz -o MacOSX10.9.sdk.tar.xz
+      tar -xJf MacOSX10.9.sdk.tar.xz -C /opt/
+    displayName: Download OSX SDK
+  - script: conda create -y -n n88 -c babesler -c conda-forge conda-build vtkbone setuptools scipy nose python=$(python.version) numpy=$(numpy.version)
+    displayName: Setup conda
+  - script: |
+      source activate n88
+      export CFLAGS="-isysroot /opt/MacOSX10.9.sdk -mmacosx-version-min=10.9 ${CFLAGS}"
+      export CXXFLAGS="-isysroot /opt/MacOSX10.9.sdk -mmacosx-version-min=10.9 ${CXXFLAGS}"  
+      python setup.py install
+    displayName: Build
+  - script: |
+      source activate n88
+      conda-build -c babesler -c conda-forge conda-recipe/n88tools/ --variants "{'python': ['$(python.version)'], 'numpy': ['$(numpy.version)']}"
+    displayName: Conda build
+  - task: CopyFiles@2
+    inputs:
+        sourceFolder: /usr/local/miniconda/envs/n88/conda-bld/osx-64/
+        contents: '*.tar.bz2'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: Copy conda build
+  - task: PublishBuildArtifacts@1
+    inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: n88tools-macOS-$(python.version)
+    displayName: Publish artifact

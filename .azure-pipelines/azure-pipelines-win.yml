@@ -1,0 +1,35 @@
+
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      # Disable because no vtk=8.2 for win-py27
+      # Python27:
+      #   python.version: '2.7'
+      #   numpy.version: '1.16'
+  steps:
+  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+    displayName: Add conda to path
+  - script: conda create -y -n n88 -c babesler -c conda-forge conda-build vtkbone setuptools scipy nose python=$(python.version) numpy=$(numpy.version)
+    displayName: Setup conda
+  - script: |
+      source activate n88
+      python setup.py install
+    displayName: Build
+  - script: |
+      call activate n88
+      conda-build -c babesler -c conda-forge conda-recipe/n88tools/ --variants "{'python': ['$(python.version)'], 'numpy': ['$(numpy.version)']}"
+    displayName: Conda build
+  - task: CopyFiles@2
+    inputs:
+        sourceFolder: C:\Miniconda\envs\n88\conda-bld\win-64\
+        contents: '*.tar.bz2'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: Copy conda build
+  - task: PublishBuildArtifacts@1
+    inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: n88tools-Windows-$(python.version)
+    displayName: Publish artifact

@@ -1,0 +1,73 @@
+
+package:
+  name: n88tools
+  version: {{ GIT_DESCRIBE_TAG | lower | replace("v","") }}
+
+source:
+  path: ./../../
+
+build:
+  number: 0
+  string: "py{{ CONDA_PY }}_np{{ CONDA_NPY }}"
+  entry_points:
+    - n88copymodel = n88tools.copymodel:main
+    - n88directmechanics = n88tools.directmechanics:main
+    - n88coarsen = n88tools.coarsen:main
+    - n88evaluate = n88tools.evaluate:main
+    - n88extractfields = n88tools.extractfields:main
+    - n88extractsets = n88tools.extractsets:main
+    - faim = n88tools.faim:main
+    - n88interpolatesolution = n88tools.interpolatesolution:main
+    - n88modelinfo = n88tools.modelinfo:main
+    - n88pistoia = n88tools.pistoia:main
+    - n88postfaim = n88tools.postfaim:main
+    - n88tabulate = n88tools.tabulate:main
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - python {{ python }}
+    - setuptools
+    - vtkbone
+    - numpy x.x
+    - scipy
+    - netcdf4
+  host:
+    - python {{ python }}
+    - vtkbone
+    - numpy x.x
+    - scipy
+    - netcdf4
+  run:
+    - python {{ python }}
+    - vtkbone
+    - numpy x.x
+    - scipy
+    - netcdf4
+
+test:
+  imports:
+    - n88tools
+  commands:
+    - faim -h
+    - n88coarsen -h
+    - n88compress -h
+    - n88copymodel -h
+    - n88directmechanics -h
+    - n88evaluate -h
+    - n88extractfields -h
+    - n88extractsets -h
+    - n88interpolatesolution -h
+    - n88modelinfo -h
+    - n88pistoia -h
+    - n88postfaim -h
+    - n88tabulate -h
+
+about:
+  home: https://github.com/Numerics88/n88tools
+  license: MIT
+  license_family: MIT
+  summary: 'Various useful tools for use with n88model finite element models.'
+  description: |
+    Command-line utilities implemented in python for manipulating finite element models.
+  dev_url: https://github.com/Numerics88/n88tools
