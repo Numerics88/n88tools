@@ -453,7 +453,7 @@ def pistoia():
     out.write (table_delimiter)
 
 
-if __name__ == "__main__":
+def main():
     try:
         pistoia()
     except N88ReportedError as e:
@@ -461,3 +461,6 @@ if __name__ == "__main__":
         sys.stderr.write ("\n")
         sys.exit (e.value)
     # Let other exceptions fall through to default python unhandled exception reporting.
+
+if __name__ == "__main__":
+    main()
