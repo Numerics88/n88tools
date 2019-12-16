@@ -252,7 +252,6 @@ then run n88directmechanics again with the --analyze action."""
 
     basename, extension = os.path.splitext(args.input_file)
     extension = extension.lower()
-    basename = os.path.split(basename)[1]
     strain = 1.00
 
     normal_strain_files = [ "%s_strain_xx.n88model" % basename,
