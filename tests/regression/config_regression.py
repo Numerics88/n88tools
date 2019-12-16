@@ -80,6 +80,10 @@ def download_testing_data(filename):
     '''
     input_uri = cfg['REGRESSION_DATA_URL'] + filename
     output_uri = os.path.join(cfg['REGRESSION_DATA_DIRECTORY'], filename)
+
+    # Create output directory if it doesn't exist
+    if not os.path.exists(cfg['REGRESSION_DATA_DIRECTORY']):
+        os.makedirs(cfg['REGRESSION_DATA_DIRECTORY'])
     
     # If we have already downloaded it, skip
     if os.path.exists(output_uri):
