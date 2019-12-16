@@ -153,7 +153,7 @@ class TestDirectMechanicsRegression(unittest.TestCase):
             [ -68.126,  -43.017,  -20.134,  -49.044,    5.524,  742.336]
         ])
 
-        self.assertTrue(np.allclose(M, D))
+        self.assertTrue(np.allclose(M, D, atol=1e-2), '{} {}'.format(M, D))
 
     def test_apparent_compliance_matrix_in_specimen_coordinate_system(self):
         '''`n88directmechanics` gives correct apparent compliance matrix in specimen coordinate system'''
@@ -170,7 +170,7 @@ class TestDirectMechanicsRegression(unittest.TestCase):
             [ 5.706e-05,  1.144e-05, -4.465e-06,  9.077e-05,  4.328e-06,  1.359e-03]
         ])
 
-        self.assertTrue(np.allclose(M, D))
+        self.assertTrue(np.allclose(M, D, atol=1e-3), '{} {}'.format(M, D))
 
     def test_optimal_rotation_matrix(self):
         '''`n88directmechanics` gives optimal rotation matrix'''
@@ -184,7 +184,7 @@ class TestDirectMechanicsRegression(unittest.TestCase):
             [ 0.88701,  0.17509,  0.42727]
         ])
 
-        self.assertTrue(np.allclose(M, D))
+        self.assertTrue(np.allclose(M, D, atol=1e-2), '{} {}'.format(M, D))
 
     def test_apparent_stiffness_matrix_in_best_orthotropic_coordinate_system(self):
         '''`n88directmechanics` gives correct apparent stiffness matrix in best orthotropic coordinate system'''
@@ -201,7 +201,7 @@ class TestDirectMechanicsRegression(unittest.TestCase):
             [   4.707,   -2.734,    3.996,   18.582,  -12.3,    703.922]
         ])
 
-        self.assertTrue(np.allclose(M, D))
+        self.assertTrue(np.allclose(M, D, atol=1e-2), '{} {}'.format(M, D))
 
     def test_apparent_compliance_matrix_in_best_orthotropic_coordinate_system(self):
         '''`n88directmechanics` gives correct apparent compliance matrix in best orthotropic coordinate system'''
@@ -218,7 +218,7 @@ class TestDirectMechanicsRegression(unittest.TestCase):
             [-2.934e-06,  3.435e-06, -4.435e-06, -3.871e-05,  2.349e-05,  1.422e-03]
         ])
 
-        self.assertTrue(np.allclose(M, D))
+        self.assertTrue(np.allclose(M, D, atol=1e-3), '{} {}'.format(M, D))
 
 
 if __name__ == '__main__':
