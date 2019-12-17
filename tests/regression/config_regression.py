@@ -28,6 +28,7 @@ cfg['REGRESSION_FILES'] = [
     ,'test25a_strain_yz_solved.n88model' 
     ,'test25a_strain_zx_solved.n88model'
     ,'test25a_strain_zz_solved.n88model'
+    ,'test25a_uniaxial_coarse.n88model'
 ]
 
 cfg['REGRESSION_DATA_URL'] = "https://github.com/Bonelab/BonelabData/trunk/data/"
