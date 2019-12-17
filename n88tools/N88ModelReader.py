@@ -24,6 +24,7 @@ class N88ModelReader:
         
         self.file_name = file_name     # Put into class namespace
         rootGroup = Dataset (file_name, 'r')
+        rootGroup.set_auto_mask(False)
 
         assert (rootGroup.Conventions == "Numerics88/Finite_Element_Model-1.0")
         
