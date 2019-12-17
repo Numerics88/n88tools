@@ -26,13 +26,6 @@ class TestPistoiaRegression(unittest.TestCase):
         shutil.copy(download_location, self.test_dir)
         self.assertTrue(os.path.isfile(os.path.join(self.test_dir, self.filename)))
 
-        # Run derived fields
-        command = ['n88derivedfields', os.path.join(self.test_dir, self.filename)]
-        self.assertTrue(
-            cfg['RUN_CALL'](command),
-            'Cannot call \"{}\"'.format(' '.join(command))
-        )
-
         # Run pistoia
         command = ['n88pistoia', os.path.join(self.test_dir, self.filename)]
         self.output = subprocess.check_output(command)

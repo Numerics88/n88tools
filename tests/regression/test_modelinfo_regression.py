@@ -55,6 +55,7 @@ class TestModelInfoRegression(unittest.TestCase):
         expected = '''
 2019-Dec-12 14:05:47 Model created by n88modelgenerator version 8.0-alpha4
 2019-Dec-12 14:06:51 Solved by n88solver_slt 8.0-alpha4
+2019-Dec-17 15:04:06 Processed by n88derivedfields 8.0-alpha4
 '''
         
         self.assertTrue(key in self.tables)
@@ -122,6 +123,18 @@ Convergence measure tolerance reached.
 Number of linear iterations = 382
 Peak data allocation of supervisory thread: 1.08 MiB
 Peak data allocation, sum over worker threads : 1.99 MiB
+
+2019-Dec-17 15:04:06
+n88derivedfields version 8.0-alpha4
+Copyright (c) 2010-2015, Numerics88 Solutions Ltd.
+Licensed to Bryce Besler, laptop; lic. no. 167
+Problem:
+  active solution       = Solution1
+  active problem        = Problem1
+  number of elements    = 7087
+  number of nodes       = 9938
+Solver engine:
+  precision             = single
 
 '''
         
@@ -284,7 +297,7 @@ Peak data allocation, sum over worker threads : 1.99 MiB
         self.assertEqual(history, expected)
 
     def test_modelinfo_solutions(self):
-        '''Active settings output correct'''
+        '''Solutions output correct'''
         key = 'Solutions:'
         expected = '''
 
@@ -292,6 +305,12 @@ Peak data allocation, sum over worker threads : 1.99 MiB
   Problem : Problem1
   Variables defined on nodes:
     Displacement
+    ReactionForce
+  Variables defined on elements:
+    Strain
+    Stress
+    StrainEnergyDensity
+    VonMisesStress
 '''
         
         self.assertTrue(key in self.tables)
