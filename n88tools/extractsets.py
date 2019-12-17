@@ -84,7 +84,7 @@ def extractsets():
         raise N88ReportedError ("ERROR reading file: " + errorObserver.ErrorMessage())
     model = reader.GetOutput()
 
-    fileroot = os.path.splitext(os.path.basename(args.input))[0]
+    fileroot = os.path.splitext(args.input)[0]
 
     # We will need this to be able to track back original Ids in the written-out data.
     vtkbone.vtkboneSelectionUtilities.AddPointPedigreeIdsArray(model)
