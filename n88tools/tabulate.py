@@ -76,11 +76,16 @@ so on.
 
 variables corresponding to values in table "Model Input":
 
-    variable name    value in analysis file table
-    ---------------------------------------------
-    filename         Filename
-    num_els          Number of elements
-    num_nodes        Number of nodes
+    variable name       value in analysis file table
+    ------------------------------------------------
+    filename            Filename
+    dx_els              Element dim X
+    dy_els              Element dim Y
+    dz_els              Element dim Z
+    num_els             Number of elements
+    num_nodes           Number of nodes
+    num_nodes_per_els   Number of nodes per element
+    dim_of_problem      Dimension of problem
 
 variables corresponding to values in table "Materials":
 
@@ -96,6 +101,63 @@ variables corresponding to values in table "Post-processing Sets":
     ---------------------------------------------
     num_pp_sets      The number of sets used in post-processing.
 
+variables corresponding to values in table "Strain":
+
+    Variable names are listed below. See table "Strain Energy Density"
+    for additional description. 'eps' standard for epsilon and 'gam'
+    for 'gamma'.
+    ------------------------------------------------------------------
+    eps_ave_xx      eps_ave_yy      eps_ave_zz
+    eps_kurt_xx     eps_kurt_yy     eps_kurt_zz
+    eps_max_xx      eps_max_yy      eps_max_zz
+    eps_median_xx   eps_median_yy   eps_median_zz
+    eps_min_xx      eps_min_yy      eps_min_zz
+    eps_perc05_xx   eps_perc05_yy   eps_perc05_zz
+    eps_perc25_xx   eps_perc25_yy   eps_perc25_zz
+    eps_perc75_xx   eps_perc75_yy   eps_perc75_zz
+    eps_perc95_xx   eps_perc95_yy   eps_perc95_zz
+    eps_skew_xx     eps_skew_yy     eps_skew_zz
+    eps_stddev_xx   eps_stddev_yy   eps_stddev_zz
+    gam_ave_xy      gam_ave_yz      gam_ave_zx
+    gam_kurt_xy     gam_kurt_yz     gam_kurt_zx
+    gam_max_xy      gam_max_yz      gam_max_zx
+    gam_median_xy   gam_median_yz   gam_median_zx
+    gam_min_xy      gam_min_yz      gam_min_zx
+    gam_perc05_xy   gam_perc05_yz   gam_perc05_zx
+    gam_perc25_xy   gam_perc25_yz   gam_perc25_zx
+    gam_perc75_xy   gam_perc75_yz   gam_perc75_zx
+    gam_perc95_xy   gam_perc95_yz   gam_perc95_zx
+    gam_skew_xy     gam_skew_yz     gam_skew_zx
+    gam_stddev_xy   gam_stddev_yz   gam_stddev_zx
+
+variables corresponding to values in table "Stress":
+
+    Variable names are listed below. See table "Strain Energy Density"
+    for additional description. 'sig' stands for 'sigma'
+    ------------------------------------------------------------------
+    sig_ave_xx      sig_ave_xy      sig_ave_yy
+    sig_ave_yz      sig_ave_zx      sig_ave_zz
+    sig_kurt_xx     sig_kurt_xy     sig_kurt_yy
+    sig_kurt_yz     sig_kurt_zx     sig_kurt_zz
+    sig_max_xx      sig_max_xy      sig_max_yy
+    sig_max_yz      sig_max_zx      sig_max_zz
+    sig_median_xx   sig_median_xy   sig_median_yy
+    sig_median_yz   sig_median_zx   sig_median_zz
+    sig_min_xx      sig_min_xy      sig_min_yy
+    sig_min_yz      sig_min_zx      sig_min_zz
+    sig_perc05_xx   sig_perc05_xy   sig_perc05_yy
+    sig_perc05_yz   sig_perc05_zx   sig_perc05_zz
+    sig_perc25_xx   sig_perc25_xy   sig_perc25_yy
+    sig_perc25_yz   sig_perc25_zx   sig_perc25_zz
+    sig_perc75_xx   sig_perc75_xy   sig_perc75_yy
+    sig_perc75_yz   sig_perc75_zx   sig_perc75_zz
+    sig_perc95_xx   sig_perc95_xy   sig_perc95_yy
+    sig_perc95_yz   sig_perc95_zx   sig_perc95_zz
+    sig_skew_xx     sig_skew_xy     sig_skew_yy
+    sig_skew_yz     sig_skew_zx     sig_skew_zz
+    sig_stddev_xx   sig_stddev_xy   sig_stddev_yy
+    sig_stddev_yz   sig_stddev_zx   sig_stddev_zz
+
 variables corresponding to values in table "Strain Energy Density":
 
     variable name    value in analysis file table
@@ -107,6 +169,10 @@ variables corresponding to values in table "Strain Energy Density":
     sed_min          minimum (all materials)
     sed_max          maximum (all materials)
     sed_median       median (all materials)
+    sed_perc05       5th percentile (all materials)
+    sed_perc25       25th percentile (all materials)
+    sed_perc75       75th percentile (all materials)
+    sed_perc95       95th percentile (all materials)
     sed_avg_mat%m    average over the nth defined material
     sed_stddev_mat%m sed_dev over the nth defined material
     sed_skew_mat%m   skewness over the nth defined material
@@ -114,6 +180,10 @@ variables corresponding to values in table "Strain Energy Density":
     sed_min_mat%m    minimum over the nth defined material
     sed_max_mat%m    maximum over the nth defined material
     sed_median_mat%m median over the nth defined material
+    sed_perc05_mat%m 5th percentile over the nth defined material
+    sed_perc25_mat%m 25th percentile over the nth defined material
+    sed_perc75_mat%m 75th percentile over the nth defined material
+    sed_perc95_mat%m 95th percentile over the nth defined material
 
 variables corresponding to values in table "Von Mises Stress":
 
@@ -126,6 +196,10 @@ variables corresponding to values in table "Von Mises Stress":
     svm_min          minimum (all materials)
     svm_max          maximum (all materials)
     svm_median       median (all materials)
+    svm_perc05       5th percentile (all materials)
+    svm_perc25       25th percentile (all materials)
+    svm_perc75       75th percentile (all materials)
+    svm_perc95       95th percentile (all materials)
     svm_avg_mat%m    average over the nth defined material
     svm_stddev_mat%m svm_dev over the nth defined material
     svm_skew_mat%m   skewness over the nth defined material
@@ -133,6 +207,10 @@ variables corresponding to values in table "Von Mises Stress":
     svm_min_mat%m    minimum over the nth defined material
     svm_max_mat%m    maximum over the nth defined material
     svm_median_mat%m median over the nth defined material
+    svm_perc05_mat%m 5th percentile over the nth defined material
+    svm_perc25_mat%m 25th percentile over the nth defined material
+    svm_perc75_mat%m 75th percentile over the nth defined material
+    svm_perc95_mat%m 95th percentile over the nth defined material
 
 variables corresponding to values in table "Nodal Displacements":
 
