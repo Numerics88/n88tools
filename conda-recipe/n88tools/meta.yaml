@@ -22,6 +22,7 @@ build:
     - n88pistoia = n88tools.pistoia:main
     - n88postfaim = n88tools.postfaim:main
     - n88tabulate = n88tools.tabulate:main
+    - n88compress = n88tools.compress:main
 
 requirements:
   build:
