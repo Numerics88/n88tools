@@ -20,7 +20,11 @@ extern "C"
 {
 #endif
 
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_finiteelementfunctions(void);
+#else
 PyMODINIT_FUNC initfiniteelementfunctions(void);
+#endif
 
 #ifdef __cplusplus
 }
