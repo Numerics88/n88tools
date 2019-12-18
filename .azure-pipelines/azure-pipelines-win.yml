@@ -21,7 +21,7 @@ jobs:
   steps:
   - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
     displayName: Add conda to path
-  - script: conda create -y -n test -c babesler -c conda-forge vtkbone setuptools scipy nose netCDF4 python=$(python.version) numpy=$(numpy.version)
+  - script: conda create -y -n test -c numerics88 -c conda-forge vtkbone setuptools scipy nose netCDF4 python=$(python.version) numpy=$(numpy.version)
     displayName: Setup conda for testing
   - script: |
       call activate test
@@ -35,7 +35,7 @@ jobs:
     displayName: Setup conda for building
   - script: |
       call activate n88
-      conda-build -c babesler -c conda-forge conda-recipe/n88tools/ --variants "{'python': ['$(python.version)'], 'numpy': ['$(numpy.version)']}"
+      conda-build -c numerics88 -c conda-forge conda-recipe/n88tools/ --variants "{'python': ['$(python.version)'], 'numpy': ['$(numpy.version)']}"
     displayName: Conda build
   - task: CopyFiles@2
     inputs:
