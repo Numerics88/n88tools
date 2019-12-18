@@ -2,6 +2,9 @@
 
 Command-line utilities implemented in python for manipulating finite element models.
 
+[![Build Status](https://dev.azure.com/babesler/n88/_apis/build/status/Numerics88.n88tools?branchName=master)](https://dev.azure.com/babesler/n88/_build/latest?definitionId=11&branchName=master)
+[![Anaconda-Server Badge](https://anaconda.org/numerics88/n88tools/badges/installer/conda.svg)](https://anaconda.org/Numerics88/n88tools/)
+
 n88tools works together with the Faim Finite Element package, but it can also be
 used to manipulate certain other kinds of finite element files, as well as certain
 micro-CT file formats.
