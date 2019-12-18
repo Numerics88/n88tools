@@ -10,7 +10,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 
 def extractsets():
@@ -75,7 +75,7 @@ def extractsets():
 
     errorObserver = ErrorObserver()
 
-    print "Reading %s file : %s" % ("N88 Model", args.input)
+    print("Reading %s file : %s" % ("N88 Model", args.input))
     reader = vtkbone.vtkboneN88ModelReader()
     reader.AddObserver ("ErrorEvent", errorObserver)
     reader.SetFileName (args.input)
@@ -96,7 +96,7 @@ def extractsets():
         while constraint:
             name = constraint.GetName()
             output_file = "%s_constraint_%s.vtp" % (fileroot, name)
-            print "Writing constraint :", output_file
+            print("Writing constraint :", output_file)
             data = model.DataSetFromConstraint (constraint.GetName())
             reduceToPolyData = vtk.vtkGeometryFilter()
             reduceToPolyData.SetInputData (data)
@@ -114,7 +114,7 @@ def extractsets():
         while node_set:
             name = node_set.GetName()
             output_file = "%s_node_set_%s.vtp" % (fileroot, name)
-            print "Writing node set :", output_file
+            print("Writing node set :", output_file)
             data = model.DataSetFromNodeSet (node_set.GetName())
             reduceToPolyData = vtk.vtkGeometryFilter()
             reduceToPolyData.SetInputData (data)
@@ -132,7 +132,7 @@ def extractsets():
         while element_set:
             name = element_set.GetName()
             output_file = "%s_element_set_%s.vtp" % (fileroot, name)
-            print "Writing element set :", output_file
+            print("Writing element set :", output_file)
             data = model.DataSetFromElementSet (element_set.GetName())
             reduceToPolyData = vtk.vtkGeometryFilter()
             reduceToPolyData.SetInputData (data)

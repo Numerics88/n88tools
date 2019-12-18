@@ -10,19 +10,26 @@ See LICENSE for details.
 """
 
 from __future__ import division
+from __future__ import print_function
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 import os
 import argparse
-import StringIO
-import ConfigParser
+try:
+    # Python 2.X
+    from StringIO import StringIO
+    from ConfigParser import RawConfigParser
+except ImportError:
+    # Python 3.X
+    from io.StringIO import StringIO
+    from configparser import RawConfigParser
 from math import *
 import numpy
 from numpy.core import *
 from numpy import linalg
 import scipy
 from scipy.optimize import fmin_powell as minimize
-import transformations
+from . import transformations
 import vtk
 from vtk.util.numpy_support import vtk_to_numpy, numpy_to_vtk
 import vtkbone
@@ -67,7 +74,7 @@ def log (msg, append=False, timestamp=True):
            result += " " * 9 + lines[0] + "\n"
        for l in lines[1:]:
            result +=  " " * 9 + l + "\n"
-    print result, 
+    print(result, end=' ')
     log_string += result
 
 
@@ -129,8 +136,8 @@ def directmechanics():
         # Some slightly fancy foot-work to get ConfigParser to read a file
         # without sections: we add a header line to create section [root]
         config_str = '[root]\n' + open(args.config, 'r').read()
-        config_fp = StringIO.StringIO(config_str)
-        config = ConfigParser.RawConfigParser()
+        config_fp = StringIO(config_str)
+        config = RawConfigParser()
         config.readfp(config_fp)
         for key,value in dict(config.items("root")).items():
             defaults[key] = value

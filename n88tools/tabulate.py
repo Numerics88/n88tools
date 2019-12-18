@@ -11,7 +11,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 def tabulate():
     from .tables import get_tables, lookups

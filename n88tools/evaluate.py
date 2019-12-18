@@ -10,9 +10,9 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 from numpy.core import *
-from finiteelement import *
+from .finiteelement import *
 
 def evaluate():
 
@@ -20,7 +20,7 @@ def evaluate():
     import argparse
     import numpy
     from numpy import column_stack
-    from N88ModelReader import N88ModelReader
+    from .N88ModelReader import N88ModelReader
 
     # -------------------------------------------------------------------------
     #    Routines for standard tasks
@@ -31,9 +31,9 @@ def evaluate():
         The first argument is printed with the a time stamp.
         Subsequent arguments are printed one to a line without a timestamp.
         """
-        print "%8.2f %s" % (time.time()-start_time, msg)
+        print("%8.2f %s" % (time.time()-start_time, msg))
         for line in additionalLines:
-            print " " * 9 + line
+            print(" " * 9 + line)
         sys.stdout.flush()
 
     start_time = time.time()

@@ -11,7 +11,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 def copymodel():
 
@@ -92,13 +92,13 @@ they may be slower to read, and are particularly slower to write."""
     elif extension == ".dat":
         reader_format = "Faim version 5 output format"
         reader = vtkbone.vtkboneFaimVersion5OutputReader()
-        print "Warning: An incomplete model will be written, as Faim version 5 .dat"
-        print "         files do not contain material data or constraints."
-        print "         The resulting model can neither be re-solved nor processed"
-        print "         with n88postfaim."
-        print " Tip:    If the corresponding .inp file is available, specify both the"
-        print "         the .inp and .dat files as input.  This will create a complete"
-        print "         solved model."
+        print("Warning: An incomplete model will be written, as Faim version 5 .dat")
+        print("         files do not contain material data or constraints.")
+        print("         The resulting model can neither be re-solved nor processed")
+        print("         with n88postfaim.")
+        print(" Tip:    If the corresponding .inp file is available, specify both the")
+        print("         the .inp and .dat files as input.  This will create a complete")
+        print("         solved model.")
     else:
         raise N88ReportedError (
 """Unsupported input file format.
@@ -155,7 +155,7 @@ Currently supported formats are:
 
     errorObserver = ErrorObserver()
 
-    print "Reading %s file : %s" % (reader_format, args.input)
+    print("Reading %s file : %s" % (reader_format, args.input))
     reader.AddObserver ("ErrorEvent", errorObserver)
     reader.SetFileName (args.input)
     reader.Update()
@@ -165,7 +165,7 @@ Currently supported formats are:
     model = reader.GetOutput()
 
     if reader2:
-        print "Reading file : %s" % args.input2
+        print("Reading file : %s" % args.input2)
         reader2.SetFileName (args.input2)
         reader2.Update()
         solved_model = reader2.GetOutput()
@@ -181,7 +181,7 @@ Currently supported formats are:
                 model.GetCellData().AddArray(data)
         model.AppendLog("Solution values obtained from %s" % args.input2)
 
-    print "Writing %s file : %s" % (writer_format, args.output)
+    print("Writing %s file : %s" % (writer_format, args.output))
     writer.SetInputData (model)
     writer.SetFileName (args.output)
     writer.Update()

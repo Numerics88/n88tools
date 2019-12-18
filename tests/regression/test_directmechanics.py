@@ -1,7 +1,7 @@
 from __future__ import division
 import os
 import unittest
-from config_regression import cfg
+from .config_regression import cfg
 import shutil, tempfile
 import vtkbone
 

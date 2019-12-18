@@ -107,7 +107,7 @@ def read_simple_table_by_row (first_header, row, column, table):
     """
     # First find header
     found_header = False
-    for i in xrange(len(table)):
+    for i in range(len(table)):
         if table[i].split()[0].lower() == first_header.lower():
             found_header = True
             break
@@ -124,7 +124,7 @@ def read_simple_table_by_key (first_header, row_key, column, table):
     """
     # First find header
     found_header = False
-    for i in xrange(len(table)):
+    for i in range(len(table)):
         try:
             if table[i].split()[0].lower() == first_header.lower():
                 found_header = True
@@ -133,7 +133,7 @@ def read_simple_table_by_key (first_header, row_key, column, table):
             pass
     if not found_header:
         return None
-    for i in xrange(i,len(table)):
+    for i in range(i,len(table)):
         columns = table[i].split()
         if columns[0] == row_key:
             return columns[column]

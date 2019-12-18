@@ -2,7 +2,7 @@ from __future__ import division
 import os
 import unittest
 import numpy as np
-from config_regression import cfg
+from .config_regression import cfg
 import shutil, tempfile
 import subprocess
 import re

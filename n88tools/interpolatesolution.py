@@ -12,7 +12,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 
 def interpolatesolution():
@@ -76,7 +76,7 @@ WARNING: For linear models only.
     # Read input data
 
     reader1 = vtkbone.vtkboneN88ModelReader()        
-    print ("Reading full resolution model file " + args.full_model)
+    print("Reading full resolution model file " + args.full_model)
     reader1.AddObserver ("ErrorEvent", errorObserver)
     reader1.SetFileName(args.full_model)
     reader1.Update()
@@ -85,7 +85,7 @@ WARNING: For linear models only.
     full_model = reader1.GetOutput()
 
     reader2 = vtkbone.vtkboneN88ModelReader()        
-    print ("Reading reduced resolution model file " + args.reduced_model)
+    print("Reading reduced resolution model file " + args.reduced_model)
     reader2.AddObserver ("ErrorEvent", errorObserver)
     reader2.SetFileName(args.reduced_model)
     reader2.Update()
@@ -97,7 +97,7 @@ WARNING: For linear models only.
     # -------------------------------------------------------------------------
     # Apply filter
 
-    print ("Interpolated reduced resolution solution.")
+    print("Interpolated reduced resolution solution.")
     filter = vtkbone.vtkboneInterpolateCoarseSolution()
     filter.AddObserver ("ErrorEvent", errorObserver)
     filter.SetInputData (0, full_model)
@@ -115,7 +115,7 @@ WARNING: For linear models only.
     # Write data
 
     writer = vtkbone.vtkboneN88ModelWriter()
-    print ("Re-writing full model.")
+    print("Re-writing full model.")
     writer.AddObserver ("ErrorEvent", errorObserver)
     writer.SetInputData (full_model)
     writer.SetFileName(args.full_model)
