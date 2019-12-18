@@ -25,6 +25,15 @@ It can be built and installed with
 python setup.py install
 ```
 
+On Mac, an extra step may be required
+```sh
+export CFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.9 ${CFLAGS}"
+export CXXFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.9 ${CXXFLAGS}"
+pip install --no-deps -e .
+```
+Note that the SDK version - `MacOSX10.15.sdk` - may be different on your machine.
+
+
 ## Authors and Contributors
 
 n88tools is maintained and supported by Numerics88
