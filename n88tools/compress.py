@@ -10,7 +10,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 def compress():
 
@@ -51,7 +51,7 @@ def compress():
     reader = vtkbone.vtkboneN88ModelReader()
     writer = vtkbone.vtkboneN88ModelWriter()
 
-    print "Reading n88model file : %s" % args.input
+    print("Reading n88model file : %s" % args.input)
     reader.AddObserver ("ErrorEvent", errorObserver)
     reader.SetFileName (args.input)
     reader.Update()
@@ -61,7 +61,7 @@ def compress():
     model = reader.GetOutput()
 
     output = args.input
-    print "Re-writing n88model file : %s" % output
+    print("Re-writing n88model file : %s" % output)
     writer.SetInputData (model)
     writer.SetFileName (output)
     writer.CompressionOn()

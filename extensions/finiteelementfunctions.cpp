@@ -181,9 +181,30 @@ static PyMethodDef finiteelementfunctionsMethods[] =
   };
 
 
+#if PY_MAJOR_VERSION >= 3
+
+static struct PyModuleDef finiteelementfunctions =
+{
+    PyModuleDef_HEAD_INIT,
+    "finiteelementfunctions", /* name of module */
+    "",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    finiteelementfunctionsMethods
+};
+
+PyMODINIT_FUNC PyInit_finiteelementfunctions(void)
+{
+  import_array();
+  return PyModule_Create(&finiteelementfunctions);
+}
+
+#else
+
 PyMODINIT_FUNC
 initfiniteelementfunctions(void)
   {
   (void) Py_InitModule("finiteelementfunctions", finiteelementfunctionsMethods);
   import_array();
   }
+
+#endif

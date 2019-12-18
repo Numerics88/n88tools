@@ -2,6 +2,9 @@
 
 Command-line utilities implemented in python for manipulating finite element models.
 
+[![Build Status](https://dev.azure.com/babesler/n88/_apis/build/status/Numerics88.n88tools?branchName=master)](https://dev.azure.com/babesler/n88/_build/latest?definitionId=11&branchName=master)
+[![Anaconda-Server Badge](https://anaconda.org/numerics88/n88tools/badges/installer/conda.svg)](https://anaconda.org/Numerics88/n88tools/)
+
 n88tools works together with the Faim Finite Element package, but it can also be
 used to manipulate certain other kinds of finite element files, as well as certain
 micro-CT file formats.
@@ -21,6 +24,15 @@ It can be built and installed with
 ```sh
 python setup.py install
 ```
+
+On Mac, an extra step may be required
+```sh
+export CFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.9 ${CFLAGS}"
+export CXXFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.9 ${CXXFLAGS}"
+pip install --no-deps -e .
+```
+Note that the SDK version - `MacOSX10.15.sdk` - may be different on your machine.
+
 
 ## Authors and Contributors
 

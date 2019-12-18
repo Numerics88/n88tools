@@ -11,7 +11,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 import numpy
 from numpy.core import *
 
@@ -153,7 +153,7 @@ tip:
         if len(v) != len(variables[0]):
             raise N88ReportedError ("Fields of different lengths.  Did you mix node and elements values?")
 
-    for i in xrange(len(variables[0])):
+    for i in range(len(variables[0])):
         values = []
         for v in variables:
             values += map(str, numpy.atleast_1d(v[i]))

@@ -11,7 +11,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 try:
     import pkg_resources
@@ -152,7 +152,7 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
         # -------------------------------------------------------------------------
         # Read input data
 
-        print ("Reading model file " + args.input_file)
+        print("Reading model file " + args.input_file)
         reader.AddObserver ("ErrorEvent", errorObserver)
         reader.SetFileName(args.input_file)
         reader.Update()
@@ -161,12 +161,12 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
         input_model = reader.GetOutput()
 
         nElements = numpy.array(input_model.GetNumberOfCells())
-        print ("Input number of elements: %s" % (nElements,))
+        print("Input number of elements: %s" % (nElements,))
 
         # -------------------------------------------------------------------------
         # Apply filter
 
-        print ("Generating coarsened model")
+        print("Generating coarsened model")
         filter = vtkbone.vtkboneCoarsenModel()
         filter.AddObserver ("ErrorEvent", errorObserver)
         filter.SetInputData (input_model)
@@ -182,7 +182,7 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
         output_model = filter.GetOutput()
 
         nElements = numpy.array(output_model.GetNumberOfCells())
-        print ("Output number of elements: %s" % (nElements,))
+        print("Output number of elements: %s" % (nElements,))
 
         # -------------------------------------------------------------------------
         # Set history and log
@@ -198,7 +198,7 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
         # -------------------------------------------------------------------------
         # Write data
 
-        print ("Writing model file " + args.output_file)
+        print("Writing model file " + args.output_file)
         writer.AddObserver ("ErrorEvent", errorObserver)
         writer.SetInputData (output_model)
         writer.SetFileName(args.output_file)
@@ -214,7 +214,7 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
         # -------------------------------------------------------------------------
         # Read input data
 
-        print ("Reading image file " + args.input_file)
+        print("Reading image file " + args.input_file)
         reader.AddObserver ("ErrorEvent", errorObserver)
         reader.SetFileName(args.input_file)
         reader.Update()
@@ -224,16 +224,16 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
 
         dims = numpy.array(input_image.GetDimensions())
         if input_image.GetCellData().GetScalars() is None:
-            print "Data on points"
+            print("Data on points")
         else:
-            print "Data on cells"
+            print("Data on cells")
             dims -= 1
-        print ("Input data dimensions: %s" % (dims,))
+        print("Input data dimensions: %s" % (dims,))
 
         # -------------------------------------------------------------------------
         # Apply filter
 
-        print ("Generating reduced resolution image")
+        print("Generating reduced resolution image")
         filter = vtkbone.vtkboneDecimateImage()
         filter.AddObserver ("ErrorEvent", errorObserver)
         filter.SetInputData (input_image)
@@ -245,12 +245,12 @@ first scaled to a density using the Homminga formula (i.e. raised to the power
         dims = numpy.array(output_image.GetDimensions())
         if not (output_image.GetCellData().GetScalars() is None):
             dims -= 1
-        print ("Output data dimensions: %s" % (dims,))
+        print("Output data dimensions: %s" % (dims,))
 
         # -------------------------------------------------------------------------
         # Write data
 
-        print ("Writing image file " + args.output_file)
+        print("Writing image file " + args.output_file)
         writer.AddObserver ("ErrorEvent", errorObserver)
         writer.SetInputData (output_image)
         writer.SetFileName(args.output_file)

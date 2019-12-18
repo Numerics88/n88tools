@@ -10,7 +10,7 @@ See LICENSE for details.
 
 from __future__ import division
 import sys
-from N88ReportedError import N88ReportedError
+from .N88ReportedError import N88ReportedError
 
 def modelinfo():
 
@@ -75,17 +75,17 @@ def modelinfo():
 
     def enumerate_group (group, list_vars=False, postfunc=None):
         for name,subgroup in group.groups.items():
-            print
-            print "  Name :", name
+            print('')
+            print("  Name : " + name)
             for attrName,attrValue in subgroup.__dict__.items():
-                print " ", attrName, ":", attrValue
+                print("  " + attrName + " : " + str(attrValue))
             for dimName,dimValue in subgroup.dimensions.items():
-                print " ", dimName, ":", len(dimValue)
+                print("  " + dimName + " : " + str(len(dimValue)))
             if list_vars:
                 variables = []
                 for varName in subgroup.variables.keys():
                     variables.append (varName)
-                print "  Variables :", ' '.join(variables)
+                print("  Variables : " + ' '.join(variables))
             if postfunc:
                 postfunc(subgroup)
 
@@ -99,34 +99,34 @@ def modelinfo():
         if first:
             first = False
         else:
-            print
-        print "History: "
-        print divider
+            print('')
+        print("History: ")
+        print(divider)
         if 'History' in rootGroup.__dict__:
-            print rootGroup.History
-        print divider
+            print(rootGroup.History)
+        print(divider)
 
     if args.log:
         if first:
             first = False
         else:
-            print
-        print "Log: "
-        print divider
+            print('')
+        print("Log: ")
+        print(divider)
         # Support older Comments field as well
         if 'Comments' in rootGroup.__dict__:
-            print rootGroup.Comments
+            print(rootGroup.Comments)
         if 'Log' in rootGroup.__dict__:
-            print rootGroup.Log
-        print divider
+            print(rootGroup.Log)
+        print(divider)
 
     if args.active:
         if first:
             first = False
         else:
-            print
-        print "Active Settings:"
-        print divider
+            print('')
+        print("Active Settings:")
+        print(divider)
         if 'ActiveSolution' in rootGroup.__dict__:
             activeSolution = rootGroup.ActiveSolution
             # Get active pproblem from active solution
@@ -137,107 +137,107 @@ def modelinfo():
             activeProblem = rootGroup.ActiveProblem
         activeProblemGroup = rootGroup.groups['Problems'].groups[activeProblem]
         activePart = activeProblemGroup.Part
-        print "  Active Solution :", activeSolution
-        print "  Active Problem :", activeProblem
-        print "  Active Part :", activePart
-        print divider
+        print("  Active Solution : " + str(activeSolution))
+        print("  Active Problem : " + activeProblem)
+        print("  Active Part : " + activePart)
+        print(divider)
 
     if args.materials:
         if first:
             first = False
         else:
-            print
-        print "Materials:"
-        print divider
+            print('')
+        print("Materials:")
+        print(divider)
         enumerate_subgroups (rootGroup, 'MaterialDefinitions')
-        print divider
+        print(divider)
 
     def parts_postfunc (group):
         if "Elements" in group.groups:
             subgroup = group.groups["Elements"]
             for name,subsubgroup in subgroup.groups.items():
-                print " ", name, ":"
+                print("  " + name + " :")
                 for dimName,dimValue in subsubgroup.dimensions.items():
-                    print "   ", dimName, ":", len(dimValue)
+                    print("    " + dimName + " : " + str(len(dimValue)))
 
     if args.parts:
         if first:
             first = False
         else:
-            print
-        print "Parts:"
-        print divider
+            print('')
+        print("Parts:")
+        print(divider)
         enumerate_subgroups (rootGroup, 'Parts', postfunc=parts_postfunc)
-        print divider
+        print(divider)
 
     if args.constraints:
         if first:
             first = False
         else:
-            print
-        print "Constraints:"
-        print divider
+            print('')
+        print("Constraints:")
+        print(divider)
         enumerate_subgroups (rootGroup, 'Constraints')
-        print divider
+        print(divider)
 
     if args.node_sets:
         if first:
             first = False
         else:
-            print
-        print "NodeSets:"
-        print divider
+            print('')
+        print("NodeSets:")
+        print(divider)
         if 'Sets' in rootGroup.groups:
             enumerate_subgroups (rootGroup.groups['Sets'], 'NodeSets')
-        print divider
+        print(divider)
 
     if args.element_sets:
         if first:
             first = False
         else:
-            print
-        print "ElementSets:"
-        print divider
+            print('')
+        print("ElementSets:")
+        print(divider)
         if 'Sets' in rootGroup.groups:
             enumerate_subgroups (rootGroup.groups['Sets'], 'ElementSets')
-        print divider
+        print(divider)
 
     if args.problems:
         if first:
             first = False
         else:
-            print
-        print "Problems:"
-        print divider
+            print('')
+        print("Problems:")
+        print(divider)
         enumerate_subgroups (rootGroup, 'Problems')
-        print divider
+        print(divider)
 
     def solutions_postfunc (group):
         if "NodeValues" in group.groups:
             subgroup = group.groups["NodeValues"]
-            print "  Variables defined on nodes:"
+            print("  Variables defined on nodes:")
             for varName in subgroup.variables.keys():
-                print "   ", varName
+                print("    " + varName)
         if "ElementValues" in group.groups:
             subgroup = group.groups["ElementValues"]
-            print "  Variables defined on elements:"
+            print("  Variables defined on elements:")
             for varName in subgroup.variables.keys():
-                print "   ", varName
+                print("    " + varName)
             if len(subgroup.groups) > 0:
-                print "  Variables defined on gauss points:"
+                print("  Variables defined on gauss points:")
                 for subsubgroup in subgroup.groups.values():
                     for varName in subsubgroup.variables.keys():
-                        print "   ", varName
+                        print("    " + varName)
 
     if args.solutions:
         if first:
             first = False
         else:
-            print
-        print "Solutions:"
-        print divider
+            print('')
+        print("Solutions:")
+        print(divider)
         enumerate_subgroups (rootGroup, 'Solutions', postfunc=solutions_postfunc)
-        print divider
+        print(divider)
 
 
 def main():

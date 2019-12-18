@@ -24,6 +24,7 @@ class N88ModelReader:
         
         self.file_name = file_name     # Put into class namespace
         rootGroup = Dataset (file_name, 'r')
+        rootGroup.set_auto_mask(False)
 
         assert (rootGroup.Conventions == "Numerics88/Finite_Element_Model-1.0")
         
@@ -125,7 +126,7 @@ class N88ModelReader:
         self.DisplacementConstraints["NodeNumber"] = array([], int)
         self.DisplacementConstraints["Sense"] = array([], int)
         self.DisplacementConstraints["Value"] = array([], float64)
-        for constraint in self.Constraints.itervalues():
+        for _,constraint in self.Constraints.items():
             if constraint["Type"] == "NodeAxisDisplacement":
                 self.DisplacementConstraints["NodeNumber"] = numpy.append(self.DisplacementConstraints["NodeNumber"], constraint["NodeNumber"])
                 self.DisplacementConstraints["Sense"] = numpy.append(self.DisplacementConstraints["Sense"], constraint["Sense"])
@@ -145,7 +146,7 @@ class N88ModelReader:
         self.ForceConstraints["NodeNumber"] = array([], int)
         self.ForceConstraints["Sense"] = array([], int)
         self.ForceConstraints["Value"] = array([], float64)
-        for constraint in self.Constraints.itervalues():
+        for _,constraint in self.Constraints.items():
             if constraint["Type"] == "NodeAxisForce":
                 self.ForceConstraints["NodeNumber"] = numpy.append(self.ForceConstraints["NodeNumber"], constraint["NodeNumber"])
                 self.ForceConstraints["Sense"] = numpy.append(self.ForceConstraints["Sense"], constraint["Sense"])

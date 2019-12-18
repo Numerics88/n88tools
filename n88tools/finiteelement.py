@@ -55,12 +55,12 @@ def generate_local_stiffness(reader):
     
     reader must be an opened N88ModelReader object.
     """
-    import analytic_km
+    from . import analytic_km
     
     mat_D = {}
     mat_km = {}
     a = reader.ElementSize
-    for id,name in reader.MaterialTable.iteritems():
+    for id,name in reader.MaterialTable.items():
         material = reader.MaterialDefinitions[name]
         if material['Type'][-9:] == "Isotropic":
             E = material['E']
@@ -76,7 +76,7 @@ def generate_local_stiffness(reader):
             element = analytic_km.OrthotropicHexahedron(E, nu, G, a)
             mat_km[id] = element.k
         else:
-            print "ERROR: Unhandled material type"
+            print("ERROR: Unhandled material type")
             sys.exit(-1)
     return mat_D, mat_km
 
@@ -94,9 +94,9 @@ def renumber_material_ids (mat_D_in, mat_km_in, g_mat_in):
     ntype = len(mat_D_in)
     ndof = 24
     nst = 6
-    keys = mat_D_in.keys()
-    D_values = mat_D_in.values()
-    km_values = mat_km_in.values()
+    keys = list(mat_D_in.keys())
+    D_values = list(mat_D_in.values())
+    km_values = list(mat_km_in.values())
     mat_D = zeros((ntype,nst,nst), float64)
     mat_km = zeros((ntype,ndof,ndof), float64)
     for i in range(ntype):
@@ -127,7 +127,7 @@ def generate_global_stiffness(mat_km, g_mat, g_num, nn, sparse=True, fast=True):
         from scipy import sparse
         from scipy.sparse import linalg
         if fast:
-            from finiteelementfunctions import assembleIJV
+            from .finiteelementfunctions import assembleIJV
             I,J,V = assembleIJV (mat_km, g_mat, g_num)
         else:
             Ie,Je = numpy.mgrid[0:3,0:3]
@@ -137,11 +137,11 @@ def generate_global_stiffness(mat_km, g_mat, g_num, nn, sparse=True, fast=True):
             J = zeros(nels*24**2, int)
             V = zeros(nels*24**2, float64)
             k = 0
-            for e in xrange(nels):
+            for e in range(nels):
                 m = g_mat[e]
-                for i in xrange(8):
+                for i in range(8):
                     iglobal = g_num[e,i]
-                    for j in xrange(8):
+                    for j in range(8):
                         jglobal = g_num[e,j]
                         I[k:k+9] = Ie + 3*iglobal
                         J[k:k+9] = Je + 3*jglobal
@@ -152,11 +152,11 @@ def generate_global_stiffness(mat_km, g_mat, g_num, nn, sparse=True, fast=True):
         # Not sparse
         from numpy import linalg
         K = zeros((nn*3,nn*3), float64)
-        for e in xrange(nels):
+        for e in range(nels):
             m = g_mat[e]
-            for i in xrange(8):
+            for i in range(8):
                 iglobal = g_num[e,i]
-                for j in xrange(8):
+                for j in range(8):
                     jglobal = g_num[e,j]
                     # Here we add the whole 3x3 node-node matrix for (i,j) into the relevant
                     # part of K
@@ -210,7 +210,7 @@ def eliminate_known_values(A, b, indices, values, sparse=True):
     g = zeros(n_reduced, int)
     j = 0
     k = 0
-    for i in xrange(n):
+    for i in range(n):
         if (k < n_known) and (indices[k] == i):
             k += 1
             # While we're at it, check for consistency
@@ -517,7 +517,7 @@ def calculate_stress (strain, mat_D, g_mat):
     nst = 6
     nels = g_mat.shape[0]
     stress = zeros((nels,nst), float64)
-    for iel in xrange(nels):
+    for iel in range(nels):
         stress[iel] = dot(mat_D[g_mat[iel]], strain[iel])
     return stress
     
@@ -529,7 +529,7 @@ def calculate_body_load (strain, mat_D, g_mat, g_num, a, nn):
     deriv = shape_der_hexahedron(a, a/2)
     B = beemat(deriv)
     body_load = zeros((nn,ndim), float64)
-    for iel in xrange(nels):
+    for iel in range(nels):
         eload = product(a) * dot(transpose(B),
                   dot(mat_D[g_mat[iel]], strain[iel]))
         body_load[g_num[iel,:],:] += eload.reshape((nod,ndim))
@@ -540,7 +540,7 @@ def calculate_yield_function (stress, material_table, material_definitions, id_k
     nels = g_mat.size
     f = zeros(nels, float64)
     # Step through each material; treat nonlinear ones
-    for id,name in material_table.iteritems():
+    for id,name in material_table.items():
         material = material_definitions[name]
         if material['Type'] == "VonMisesIsotropic":
             Y = material['Y']
