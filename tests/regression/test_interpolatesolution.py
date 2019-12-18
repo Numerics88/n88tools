@@ -1,9 +1,6 @@
 from __future__ import division
 import os
 import unittest
-from n88tools import transformations
-import numpy as np
-import math
 from config_regression import cfg
 import shutil, tempfile
 import subprocess

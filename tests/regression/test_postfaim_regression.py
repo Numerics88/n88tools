@@ -2,13 +2,9 @@ from __future__ import division
 import os
 import unittest
 from n88tools.tables import get_tables, lookups
-import numpy as np
-import math
 from config_regression import cfg
 import shutil, tempfile
 import subprocess
-import vtkbone
-import re
 
 
 class TestPostFaimRegression(unittest.TestCase):
@@ -28,7 +24,7 @@ class TestPostFaimRegression(unittest.TestCase):
         shutil.copy(download_location, self.test_dir)
         self.assertTrue(os.path.isfile(os.path.join(self.test_dir, self.filename)))
 
-        # Run pistoia
+        # Run postfaim
         self.output_file = os.path.join(self.test_dir, 'postfaim_output.txt')
         command = ['n88postfaim', '--output_file', self.output_file, os.path.join(self.test_dir, self.filename)]
         self.output = subprocess.check_output(command)

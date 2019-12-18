@@ -1,14 +1,8 @@
 from __future__ import division
 import os
 import unittest
-from n88tools.tables import get_tables, lookups
-import numpy as np
-import math
 from config_regression import cfg
 import shutil, tempfile
-import subprocess
-import vtkbone
-import re
 
 
 class TestTabulateRegression(unittest.TestCase):
@@ -29,13 +23,13 @@ class TestTabulateRegression(unittest.TestCase):
         # Run postfaim
         self.output_file = os.path.join(self.test_dir, 'postfaim_output.txt')
         command = ['n88postfaim', '--output_file', self.output_file, os.path.join(self.test_dir, self.filename)]
-        self.output = subprocess.check_output(command)
+        self.assertTrue(cfg['RUN_CALL'](command))
         self.assertTrue(os.path.isfile(self.output_file))
 
         # Run tabulate
         self.csv_file = os.path.join(self.test_dir, 'tabulate.csv')
         command = ['n88tabulate', '-H', '--output_file', self.csv_file, self.output_file]
-        self.output = subprocess.check_output(command)
+        self.assertTrue(cfg['RUN_CALL'](command))
         self.assertTrue(os.path.isfile(self.csv_file))
 
     def tearDown(self):
