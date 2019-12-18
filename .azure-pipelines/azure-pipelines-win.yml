@@ -9,6 +9,15 @@ jobs:
       # Python27:
       #   python.version: '2.7'
       #   numpy.version: '1.16'
+      Python36:
+        python.version: '3.6'
+        numpy.version: '1.16'
+      Python37:
+        python.version: '3.7'
+        numpy.version: '1.16'
+      Python38:
+        python.version: '3.8'
+        numpy.version: '1.16'
   steps:
   - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
     displayName: Add conda to path
