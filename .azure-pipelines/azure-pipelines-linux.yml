@@ -20,16 +20,18 @@ jobs:
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
     displayName: Add conda to path
-  - script: conda create -y -n n88 -c babesler -c conda-forge conda-build vtkbone setuptools scipy nose netCDF4 python=$(python.version) numpy=$(numpy.version)
-    displayName: Setup conda
+  - script: conda create -y -n test -c babesler -c conda-forge vtkbone setuptools scipy nose netCDF4 python=$(python.version) numpy=$(numpy.version)
+    displayName: Setup conda for testing
   - script: |
-      source activate n88
+      source activate test
       python setup.py install
     displayName: Build
   - script: |
-      source activate n88
+      source activate test
       nosetests tests
     displayName: Test
+  - script: conda create -y -n n88 conda-build
+    displayName: Setup conda for building
   - script: |
         source activate n88
         conda-build -c babesler -c conda-forge conda-recipe/n88tools/ --variants "{'python': ['$(python.version)'], 'numpy': ['$(numpy.version)']}"
