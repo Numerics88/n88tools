@@ -25,7 +25,7 @@ class TestEvaluateRegression(unittest.TestCase):
 
         # Run the command
         command = ['n88evaluate', self.model_filename]
-        self.output = subprocess.check_output(command)
+        self.output = subprocess.check_output(command).decode("utf-8") 
 
     def tearDown(self):
         # Remove temporary directory and all files

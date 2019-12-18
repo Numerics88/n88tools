@@ -25,7 +25,7 @@ class TestModelInfoRegression(unittest.TestCase):
 
         # Run command
         command = ['n88modelinfo', self.model_filename]
-        self.output = subprocess.check_output(command)
+        self.output = subprocess.check_output(command).decode("utf-8")
 
         # Split tables
         pattern_block = '----------------------------------------------------------------------'

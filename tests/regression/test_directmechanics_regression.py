@@ -41,7 +41,7 @@ class TestDirectMechanicsRegression(unittest.TestCase):
 
         # Run command
         command = ['n88directmechanics', '--analyze', os.path.join(self.test_dir, self.aim_filename)]
-        self.output = subprocess.check_output(command)
+        self.output = subprocess.check_output(command).decode("utf-8") 
 
     def tearDown(self):
         # Remove temporary directory and all files

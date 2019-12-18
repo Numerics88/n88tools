@@ -30,13 +30,13 @@ class TestExtractFieldsRegression(unittest.TestCase):
     def test_extractfields(self):
         '''Can run `n88extractfields` on a file'''
         command = ['n88extractfields', 'Displacement', self.model_filename]
-        output = subprocess.check_output(command)
+        output = subprocess.check_output(command).decode("utf-8")
         self.assertNotEqual(output, '')
 
     def test_extractfields_displacement(self):
         '''Can run `n88extractfields Displacement` on a file'''
         command = ['n88extractfields', 'Displacement', self.model_filename]
-        output = subprocess.check_output(command).split('\n')
+        output = subprocess.check_output(command).decode("utf-8").split('\n')
 
         first_line = np.array([float(x) for x in output[0].split('\t')])
         M = np.array([-0.0012419662390147116, -0.000836902353299627, 0.0])
@@ -46,7 +46,7 @@ class TestExtractFieldsRegression(unittest.TestCase):
     def test_extractfields_displacement_nodenumber(self):
         '''Can run `n88extractfields NodeNumber,Displacement` on a file'''
         command = ['n88extractfields', 'NodeNumber,Displacement', self.model_filename]
-        output = subprocess.check_output(command).split('\n')
+        output = subprocess.check_output(command).decode("utf-8").split('\n')
 
         first_line = np.array([float(x) for x in output[7162].split('\t')])
         M = np.array([7163, -8.00662123123e-05, -0.000160804893964, -0.0046864000638 ])

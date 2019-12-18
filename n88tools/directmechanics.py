@@ -19,9 +19,9 @@ try:
     # Python 2.X
     from StringIO import StringIO
     from ConfigParser import RawConfigParser
-except ImportError:
+except ModuleNotFoundError:
     # Python 3.X
-    from io.StringIO import StringIO
+    from io import StringIO
     from configparser import RawConfigParser
 from math import *
 import numpy

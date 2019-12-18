@@ -239,7 +239,7 @@ def pistoia():
         float_row_format = "%%-%ds" % left_width + "%11.3E"*num_col + "\n"
         if num_col == 1:
             values = CalculateStats(data, stats)
-            for stat_name, stat_value in values.iteritems():
+            for stat_name, stat_value in values.items():
                 if isinstance(stat_value, numbers.Integral):
                     row_format = int_row_format
                 else:

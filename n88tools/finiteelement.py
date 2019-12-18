@@ -60,7 +60,7 @@ def generate_local_stiffness(reader):
     mat_D = {}
     mat_km = {}
     a = reader.ElementSize
-    for id,name in reader.MaterialTable.iteritems():
+    for id,name in reader.MaterialTable.items():
         material = reader.MaterialDefinitions[name]
         if material['Type'][-9:] == "Isotropic":
             E = material['E']
@@ -94,9 +94,9 @@ def renumber_material_ids (mat_D_in, mat_km_in, g_mat_in):
     ntype = len(mat_D_in)
     ndof = 24
     nst = 6
-    keys = mat_D_in.keys()
-    D_values = mat_D_in.values()
-    km_values = mat_km_in.values()
+    keys = list(mat_D_in.keys())
+    D_values = list(mat_D_in.values())
+    km_values = list(mat_km_in.values())
     mat_D = zeros((ntype,nst,nst), float64)
     mat_km = zeros((ntype,ndof,ndof), float64)
     for i in range(ntype):
@@ -540,7 +540,7 @@ def calculate_yield_function (stress, material_table, material_definitions, id_k
     nels = g_mat.size
     f = zeros(nels, float64)
     # Step through each material; treat nonlinear ones
-    for id,name in material_table.iteritems():
+    for id,name in material_table.items():
         material = material_definitions[name]
         if material['Type'] == "VonMisesIsotropic":
             Y = material['Y']

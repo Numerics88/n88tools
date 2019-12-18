@@ -25,7 +25,7 @@ class TestPistoiaRegressionCritical(unittest.TestCase):
 
         # Run pistoia
         command = ['n88pistoia', '-v', '3.0', '-s', '0.01', os.path.join(self.test_dir, self.filename)]
-        self.output = subprocess.check_output(command)
+        self.output = subprocess.check_output(command).decode("utf-8")
 
     def tearDown(self):
         # Remove temporary directory and all files
