@@ -659,18 +659,6 @@ lookups["sed_kurt_mat%m"] = \
 lookups["sed_median_mat%m"] = \
         lambda m : get_labelled_value ("median",
                         subtables(tables["Strain Energy Density"])[m])
-lookups["sed_perc05_mat%m"] = \
-        lambda m : get_labelled_value ("perc05",
-                        subtables(tables["Strain Energy Density"])[m])
-lookups["sed_perc25_mat%m"] = \
-        lambda m : get_labelled_value ("perc25",
-                        subtables(tables["Strain Energy Density"])[m])
-lookups["sed_perc75_mat%m"] = \
-        lambda m : get_labelled_value ("perc75",
-                        subtables(tables["Strain Energy Density"])[m])
-lookups["sed_perc95_mat%m"] = \
-        lambda m : get_labelled_value ("perc95",
-                        subtables(tables["Strain Energy Density"])[m])
 lookups["svm_avg"] = \
         lambda : get_labelled_value ("average",
                                         tables["Von Mises Stress"])
@@ -724,18 +712,6 @@ lookups["svm_kurt_mat%m"] = \
                         subtables(tables["Von Mises Stress"])[m])
 lookups["svm_median_mat%m"] = \
         lambda m : get_labelled_value ("median",
-                        subtables(tables["Von Mises Stress"])[m])
-lookups["svm_perc05_mat%m"] = \
-        lambda m : get_labelled_value ("perc05",
-                        subtables(tables["Von Mises Stress"])[m])
-lookups["svm_perc25_mat%m"] = \
-        lambda m : get_labelled_value ("perc25",
-                        subtables(tables["Von Mises Stress"])[m])
-lookups["svm_perc75_mat%m"] = \
-        lambda m : get_labelled_value ("perc75",
-                        subtables(tables["Von Mises Stress"])[m])
-lookups["svm_perc95_mat%m"] = \
-        lambda m : get_labelled_value ("perc95",
                         subtables(tables["Von Mises Stress"])[m])
 lookups["dx_avg_ns%n"] = \
         lambda n : read_simple_table_by_key ("ux", "average", 1,
