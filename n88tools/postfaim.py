@@ -137,7 +137,7 @@ def postfaim():
         material = materialDefinitions.groups[materialNames[m]]
         if len(material.variables) != 0:
             # Has at least one netcdf variable -> is a material array
-            materialArrayLength[m] = material.variables.values()[0].shape[0]
+            materialArrayLength[m] = list(material.variables.values())[0].shape[0]
 
     def SplitOnCommaOrSemicolon (s):
         tokens = s.split(",")
