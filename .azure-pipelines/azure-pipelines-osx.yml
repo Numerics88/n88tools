@@ -38,7 +38,7 @@ jobs:
     displayName: Build
   - script: |
       source activate test
-      nosetests tests
+      nosetests --traverse-namespace tests
     displayName: Test
   - script: conda create -y -n n88 conda-build
     displayName: Setup conda for building
