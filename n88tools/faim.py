@@ -155,9 +155,9 @@ Select and run solver manually.""")
         # The test for a material array is if there are any variables defined.
         if (not has_elastoplastic and
             len(materials) == 1 and
-            len(materials[0].variables) > 0):
+            len(list(materials)[0].variables) > 0):
             # Compare length of first variable of first material to number_elements
-            if (materials[0].variables.values()[0].shape[0] == number_elements):
+            if (list(list(materials)[0].variables.values())[0].shape[0] == number_elements):
                 has_max_length_material_array = True
         rootGroup.close()
 
