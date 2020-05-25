@@ -31,7 +31,7 @@ def pistoia():
 
     parser = argparse.ArgumentParser (
         description="""
-    Calculate Pistoia yield critera.
+    Calculate Pistoia yield criteria.
 
     This is a method if estimating yield strength from linear solutions.
     In general, it would be preferable to use a non-linear elastoplastic
@@ -316,7 +316,7 @@ def pistoia():
         set_data = twist_masked[set_indices]
         rot_ns1 = set_data.mean(axis=0)
 
-        # Calculate average torque on speficifed node set.
+        # Calculate average torque on specified node set.
         rf = zeros (nodeValues.variables["ReactionForce"].shape, float64)
         rf[:] = nodeValues.variables["ReactionForce"][:]
         torque = numpy.roll(rf,1,axis=1) * numpy.roll(p,2,axis=1) \
