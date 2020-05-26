@@ -25,7 +25,7 @@ jobs:
     displayName: Setup conda for testing
   - script: |
       call activate test
-      python setup.py install
+      pip install .
     displayName: Build
   - script: |
       call activate test
