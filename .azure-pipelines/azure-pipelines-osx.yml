@@ -5,9 +5,6 @@ jobs:
     vmImage: 'macOS-latest'
   strategy:
     matrix:
-      Python27:
-        python.version: '2.7'
-        numpy.version: '1.18'
       Python36:
         python.version: '3.6'
         numpy.version: '1.18'

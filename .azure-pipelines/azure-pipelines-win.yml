@@ -5,10 +5,6 @@ jobs:
     vmImage: 'vs2017-win2016'
   strategy:
     matrix:
-      # Disable because no vtk=8.2 for win-py27
-      # Python27:
-      #   python.version: '2.7'
-      #   numpy.version: '1.18'
       Python36:
         python.version: '3.6'
         numpy.version: '1.18'
