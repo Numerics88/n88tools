@@ -5,7 +5,7 @@ import numpy
 setup (
 
     name = "n88tools",
-    version = "8.3.0",
+    version = "9.0.0",
     packages = ['n88tools'],
     ext_modules = [Extension('n88tools.finiteelementfunctions',
                              include_dirs = [numpy.get_include()],
