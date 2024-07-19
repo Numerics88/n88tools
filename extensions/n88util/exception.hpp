@@ -13,9 +13,15 @@
 
 
 /** Throws n88_exception and sets the file name and line number. */
+#if __cplusplus >= 201703L
+#define throw_n88_exception(x)                                              \
+    if(std::uncaught_exceptions() == 0)                                     \
+        throw n88::n88_exception ((x), __FILE__, __LINE__)
+#else
 #define throw_n88_exception(x)                                              \
     if(!std::uncaught_exception())                                          \
         throw n88::n88_exception ((x), __FILE__, __LINE__)
+#endif
 
 /** If the argument is false, throws n88_exception and sets the file name and line number. */
 #define n88_assert(x)                                                       \
