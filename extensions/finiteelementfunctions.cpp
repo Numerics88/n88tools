@@ -9,6 +9,11 @@
      PURPOSE.  See the above copyright notice for more information.
 =========================================================================*/
 
+/* This removes functions deprecated as of numpy 1.7,
+   since such functions will be removed in numpy 2.x */
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+
+
 #include "finiteelementfunctions.h"
 #include "numpy/arrayobject.h"
 #include "n88util/array.hpp"
@@ -26,14 +31,14 @@ assembleIJV (PyObject *self, PyObject *args)
   PyArrayObject* g_mat_array = NULL;
   PyObject* g_num_object = NULL;
   PyArrayObject* g_num_array = NULL;
-  PyObject * I_array = NULL;
-  PyObject * J_array = NULL;
-  PyObject * V_array = NULL;
+  PyArrayObject* I_array = NULL;
+  PyArrayObject* J_array = NULL;
+  PyArrayObject* V_array = NULL;
   PyObject* result = NULL;
-  size_t nels = 0;
-  size_t nod = 0;
-  size_t ntype = 0;
-  size_t ndof = 0;
+  npy_intp nels = 0;
+  npy_intp nod = 0;
+  int ntype = 0;
+  int ndof = 0;
   npy_intp dims[3] = {0,0,0};
 
   ok = PyArg_ParseTuple(args, "OOO", &mat_km_object, &g_mat_object, &g_num_object);
@@ -42,14 +47,14 @@ assembleIJV (PyObject *self, PyObject *args)
   mat_km_array = (PyArrayObject *)PyArray_FROM_OTF(
                       mat_km_object, NPY_FLOAT64,  NPY_ARRAY_IN_ARRAY);
   if (mat_km_array == NULL) goto fail;
-  if (mat_km_array->nd != 3)
+  if (PyArray_NDIM(mat_km_array) != 3)
     {
     PyErr_SetString (PyExc_RuntimeError, "mat_km must have dimension 3.");
     goto fail;
     }
-  ntype = mat_km_array->dimensions[0];
-  ndof = mat_km_array->dimensions[1];
-  if (mat_km_array->dimensions[2] != ndof)
+  ntype = PyArray_DIMS(mat_km_array)[0];
+  ndof = PyArray_DIMS(mat_km_array)[1];
+  if (PyArray_DIMS(mat_km_array)[2] != ndof)
     {
     PyErr_SetString (PyExc_RuntimeError, "Second and third dimensions of mat_km must be equal.");
     goto fail;
@@ -63,41 +68,41 @@ assembleIJV (PyObject *self, PyObject *args)
   g_mat_array = (PyArrayObject *)PyArray_FROM_OTF(
                     g_mat_object, NPY_INT64,  NPY_ARRAY_IN_ARRAY);
   if (g_mat_array == NULL) goto fail;
-  if (g_mat_array->nd != 1)
+  if (PyArray_NDIM(g_mat_array) != 1)
     {
     PyErr_SetString (PyExc_RuntimeError, "g_mat must have dimension 1.");
     goto fail;
     }
-  nels = g_mat_array->dimensions[0];
+  nels = PyArray_DIMS(g_mat_array)[0];
 
   g_num_array = (PyArrayObject *)PyArray_FROM_OTF(
                    g_num_object, NPY_INT64,  NPY_ARRAY_IN_ARRAY);
   if (g_num_array == NULL) return NULL;
-  if (g_num_array->nd != 2)
+  if (PyArray_NDIM(g_num_array) != 2)
     {
     PyErr_SetString (PyExc_RuntimeError, "g_num must have dimension 2.");
     goto fail;
     }
-  nod = g_num_array->dimensions[1];
+  nod = PyArray_DIMS(g_num_array)[1];
   if (nod != 8)
     {
     PyErr_SetString (PyExc_RuntimeError, "g_num second dimension must have length 8.");
-    goto fail;      
+    goto fail;
     }
-  if (g_num_array->dimensions[0] != nels)
+  if (PyArray_DIMS(g_num_array)[0] != nels)
     {
     PyErr_SetString (PyExc_RuntimeError, "Mismatched sized: g_num and g_mat.");
-    goto fail;    
+    goto fail;
     }
 
   dims[0] = nels*24*24;
-  I_array = PyArray_SimpleNew (1, dims, NPY_INT64);
+  I_array = (PyArrayObject*)PyArray_SimpleNew (1, dims, NPY_INT64);
   if (I_array == NULL) goto fail;
-  J_array = PyArray_SimpleNew (1, dims, NPY_INT64);
+  J_array = (PyArrayObject*)PyArray_SimpleNew (1, dims, NPY_INT64);
   if (J_array == NULL) goto fail;
-  V_array = PyArray_SimpleNew (1, dims, NPY_FLOAT64);
+  V_array = (PyArrayObject*)PyArray_SimpleNew (1, dims, NPY_FLOAT64);
   if (V_array == NULL) goto fail;
-  
+
   // scope: necessary to allow goto to jump past declarations.
     {
     // Wrap python array data in n88::array objects. This will make it easier
@@ -125,23 +130,23 @@ assembleIJV (PyObject *self, PyObject *args)
 
     const npy_int64 Ie[9] = {0, 0, 0, 1, 1, 1, 2, 2, 2};
     const npy_int64 Je[9] = {0, 1, 2, 0, 1, 2, 0, 1, 2};
-    
+
     size_t k = 0;
-    for (size_t e=0; e<nels; ++e)
+    for (npy_intp e=0; e<nels; ++e)
       {
       size_t m = g_mat[e];
-      for (size_t i=0; i<8; ++i)
+      for (int i=0; i<8; ++i)
         {
         size_t iglobal = g_num(e,i);
-        for (size_t j=0; j<8; ++j)
+        for (int j=0; j<8; ++j)
           {
           size_t jglobal = g_num(e,j);
-          for (size_t l=0; l<9; ++l)
+          for (int l=0; l<9; ++l)
             { I[k+l] = Ie[l] + 3*iglobal; }
-          for (size_t l=0; l<9; ++l)
+          for (int l=0; l<9; ++l)
             { J[k+l] = Je[l] + 3*jglobal; }
-          for (size_t a=0; a<3; ++a)
-            for (size_t b=0; b<3; ++b)
+          for (int a=0; a<3; ++a)
+            for (int b=0; b<3; ++b)
               { V[k+3*a+b] = mat_km(m,3*i+a,3*j+b); }
           k += 9;
           }
@@ -173,7 +178,7 @@ assembleIJV (PyObject *self, PyObject *args)
   }
 
 
-static PyMethodDef finiteelementfunctionsMethods[] = 
+static PyMethodDef finiteelementfunctionsMethods[] =
   {
     {"assembleIJV",  assembleIJV, METH_VARARGS,
      "Some functions to speed up finiteelement module."},
