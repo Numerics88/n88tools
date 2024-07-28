@@ -9,7 +9,6 @@ http://www.numerics88.com/
 See LICENSE for details.
 """
 
-from __future__ import division
 import sys
 from .N88ReportedError import N88ReportedError
 

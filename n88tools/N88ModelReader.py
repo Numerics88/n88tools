@@ -7,8 +7,7 @@ See LICENSE for details.
 """
 
 import sys
-import numpy
-from numpy.core import *
+import numpy as np
 from netCDF4 import Dataset
 
 class N88ModelReader:
@@ -75,7 +74,7 @@ class N88ModelReader:
         self.ElementNodeNumbers -= 1  # Convert to 0-indexed
         # Convert to S&G topology
         if self.ConvertToSGTopology:
-            key = array((0,4,5,1,2,6,7,3))
+            key = np.array((0,4,5,1,2,6,7,3))
             self.ElementNodeNumbers = self.ElementNodeNumbers[:,key]
 
         materialIDs_netCDF = activePartGroup.groups['Elements'].groups['Hexahedrons'].variables['MaterialID']
@@ -123,19 +122,19 @@ class N88ModelReader:
 
         # Combine all the Displacement constraints: sort and eliminate duplicates
         self.DisplacementConstraints = {}
-        self.DisplacementConstraints["NodeNumber"] = array([], int)
-        self.DisplacementConstraints["Sense"] = array([], int)
-        self.DisplacementConstraints["Value"] = array([], float64)
+        self.DisplacementConstraints["NodeNumber"] = np.array([], np.int64)
+        self.DisplacementConstraints["Sense"] = np.array([], np.int64)
+        self.DisplacementConstraints["Value"] = np.array([], np.float64)
         for _,constraint in self.Constraints.items():
             if constraint["Type"] == "NodeAxisDisplacement":
-                self.DisplacementConstraints["NodeNumber"] = numpy.append(self.DisplacementConstraints["NodeNumber"], constraint["NodeNumber"])
-                self.DisplacementConstraints["Sense"] = numpy.append(self.DisplacementConstraints["Sense"], constraint["Sense"])
-                self.DisplacementConstraints["Value"] = numpy.append(self.DisplacementConstraints["Value"], constraint["Value"])
+                self.DisplacementConstraints["NodeNumber"] = np.append(self.DisplacementConstraints["NodeNumber"], constraint["NodeNumber"])
+                self.DisplacementConstraints["Sense"] = np.append(self.DisplacementConstraints["Sense"], constraint["Sense"])
+                self.DisplacementConstraints["Value"] = np.append(self.DisplacementConstraints["Value"], constraint["Value"])
         if len(self.DisplacementConstraints["NodeNumber"]) > 0:
-            key = numpy.lexsort((self.DisplacementConstraints["Sense"],self.DisplacementConstraints["NodeNumber"]))
-            mask_unique = numpy.hstack([True,
-                                        (numpy.diff(self.DisplacementConstraints["NodeNumber"][key]) != 0) |
-                                        (numpy.diff(self.DisplacementConstraints["Sense"][key]) != 0)])
+            key = np.lexsort((self.DisplacementConstraints["Sense"],self.DisplacementConstraints["NodeNumber"]))
+            mask_unique = np.hstack([True,
+                                        (np.diff(self.DisplacementConstraints["NodeNumber"][key]) != 0) |
+                                        (np.diff(self.DisplacementConstraints["Sense"][key]) != 0)])
             key = key[mask_unique]
             self.DisplacementConstraints["NodeNumber"] = self.DisplacementConstraints["NodeNumber"][key]
             self.DisplacementConstraints["Sense"] = self.DisplacementConstraints["Sense"][key]
@@ -143,19 +142,19 @@ class N88ModelReader:
 
         # Combine all the Force constraints: sort and eliminate duplicates
         self.ForceConstraints = {}
-        self.ForceConstraints["NodeNumber"] = array([], int)
-        self.ForceConstraints["Sense"] = array([], int)
-        self.ForceConstraints["Value"] = array([], float64)
+        self.ForceConstraints["NodeNumber"] = np.array([], np.int64)
+        self.ForceConstraints["Sense"] = np.array([], np.int64)
+        self.ForceConstraints["Value"] = np.array([], np.float64)
         for _,constraint in self.Constraints.items():
             if constraint["Type"] == "NodeAxisForce":
-                self.ForceConstraints["NodeNumber"] = numpy.append(self.ForceConstraints["NodeNumber"], constraint["NodeNumber"])
-                self.ForceConstraints["Sense"] = numpy.append(self.ForceConstraints["Sense"], constraint["Sense"])
-                self.ForceConstraints["Value"] = numpy.append(self.ForceConstraints["Value"], constraint["Value"])
+                self.ForceConstraints["NodeNumber"] = np.append(self.ForceConstraints["NodeNumber"], constraint["NodeNumber"])
+                self.ForceConstraints["Sense"] = np.append(self.ForceConstraints["Sense"], constraint["Sense"])
+                self.ForceConstraints["Value"] = np.append(self.ForceConstraints["Value"], constraint["Value"])
         if len(self.ForceConstraints["NodeNumber"]) > 0:
-            key = numpy.lexsort((self.ForceConstraints["Sense"],self.ForceConstraints["NodeNumber"]))
-            mask_unique = numpy.hstack([True,
-                                        (numpy.diff(self.ForceConstraints["NodeNumber"][key]) != 0) |
-                                        (numpy.diff(self.ForceConstraints["Sense"][key]) != 0)])
+            key = np.lexsort((self.ForceConstraints["Sense"],self.ForceConstraints["NodeNumber"]))
+            mask_unique = np.hstack([True,
+                                        (np.diff(self.ForceConstraints["NodeNumber"][key]) != 0) |
+                                        (np.diff(self.ForceConstraints["Sense"][key]) != 0)])
             key = key[mask_unique]
             self.ForceConstraints["NodeNumber"] = self.ForceConstraints["NodeNumber"][key]
             self.ForceConstraints["Sense"] = self.ForceConstraints["Sense"][key]

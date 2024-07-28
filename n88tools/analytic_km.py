@@ -8,33 +8,29 @@ http://www.numerics88.com/
 See LICENSE for details.
 """
 
-
-from __future__ import division
-
-import numpy
-from numpy.core import *
+import numpy as np
 
 
 class Hexahedron:
 
-    I1 = array(( 1/3,-1/2, 1/6, 1/2,-1/2, 1,-1/2, -1,
+    I1 = np.array(( 1/3,-1/2, 1/6, 1/2,-1/2, 1,-1/2, -1,
                  1/6,-1/2, 1/3, 1/2, 1/2,-1, 1/2,  1))
     I1.resize((2,2,2,2))
-    H = array(((0,0,0),
-               (0,0,1),
-               (1,0,1),
-               (1,0,0),
-               (0,1,0),
-               (0,1,1),
-               (1,1,1),
-               (1,1,0)))
-    i,m,j,n = numpy.mgrid[0:8,0:3,0:8,0:3]
+    H = np.array(((0,0,0),
+                  (0,0,1),
+                  (1,0,1),
+                  (1,0,0),
+                  (0,1,0),
+                  (0,1,1),
+                  (1,1,1),
+                  (1,1,0)))
+    i,m,j,n = np.mgrid[0:8,0:3,0:8,0:3]
     I_unscaled = (I1[H[i,0], 1*(m==0), H[j,0], 1*(n==0)] *
                   I1[H[i,1], 1*(m==1), H[j,1], 1*(n==1)] *
                   I1[H[i,2], 1*(m==2), H[j,2], 1*(n==2)])
 
     def __init__(self, a):
-        self.I = self.I_unscaled * prod(a) / (a[self.m]*a[self.n])
+        self.I = self.I_unscaled * np.prod(a) / (a[self.m]*a[self.n])
 
 
 class IsotropicHexahedron(Hexahedron):
@@ -69,7 +65,7 @@ class OrthotropicHexahedron(Hexahedron):
 
         # Change flat independent parameters to tensors
         flat_nu = nu
-        nu = zeros((3,3), float)
+        nu = np.zeros((3,3), np.float64)
         nu[1,2] = flat_nu[0]
         nu[2,0] = flat_nu[1]
         nu[0,1] = flat_nu[2]
@@ -77,7 +73,7 @@ class OrthotropicHexahedron(Hexahedron):
         nu[0,2] = nu[2,0] * E[0] / E[2]
         nu[1,0] = nu[0,1] * E[1] / E[0]
         flat_G = G
-        G = zeros((3,3), float)
+        G = np.zeros((3,3), np.float64)
         G[1,2] = flat_G[0]
         G[2,0] = flat_G[1]
         G[0,1] = flat_G[2]

@@ -4,10 +4,8 @@ transformations.py
 Some elementary geometric manipulations.
 """
 
-from __future__ import division
-
 from math import cos, sin
-from numpy.core import *
+from numpy import array
 
 def rotationZ (phi):
     return array (((( cos(phi), -sin(phi), 0 )),

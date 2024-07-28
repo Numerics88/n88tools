@@ -8,25 +8,22 @@ http://www.numerics88.com/
 See LICENSE for details.
 """
 
-from __future__ import division
-
 import sys
-import numpy
-from numpy.core import *
+import numpy as np
 from numpy import linalg
-from math import *
+from math import sqrt, sin, cos, tan, asin
 
 
 def stress_strain_isotropic (E, nu):
     s = nu/(1-nu)
     t = (1-2*nu)/(2*(1-nu))
-    D = array ([[ 1, s, s, 0, 0, 0],
-                [ s, 1, s, 0, 0, 0],
-                [ s, s, 1, 0, 0, 0],
-                [ 0, 0, 0, t, 0, 0],
-                [ 0, 0, 0, 0, t, 0],
-                [ 0, 0, 0, 0, 0, t]]
-               )
+    D = np.array ([[ 1, s, s, 0, 0, 0],
+                   [ s, 1, s, 0, 0, 0],
+                   [ s, s, 1, 0, 0, 0],
+                   [ 0, 0, 0, t, 0, 0],
+                   [ 0, 0, 0, 0, t, 0],
+                   [ 0, 0, 0, 0, 0, t]]
+                  )
     D *= E*(1-nu)/((1+nu)*(1-2*nu))
     return D
 
@@ -38,14 +35,14 @@ def stress_strain_orthotropic (E, nu, G):
     nu21 = (E[2]/E[1])*nu12
     nu02 = (E[0]/E[2])*nu20
     nu10 = (E[1]/E[0])*nu01
-    D = zeros((6,6), float)
-    D[:3,:3] = array ([[     1/E[0], -nu10/E[1], -nu20/E[2]],
-                       [ -nu01/E[0],     1/E[1], -nu21/E[2]],
-                       [ -nu02/E[0], -nu12/E[1],     1/E[2]]])
+    D = np.zeros((6,6), float)
+    D[:3,:3] = np.array ([[     1/E[0], -nu10/E[1], -nu20/E[2]],
+                          [ -nu01/E[0],     1/E[1], -nu21/E[2]],
+                          [ -nu02/E[0], -nu12/E[1],     1/E[2]]])
     D[3,3] = 1/G[0]
     D[4,4] = 1/G[1]
     D[5,5] = 1/G[2]
-    return numpy.linalg.inv(D)
+    return np.linalg.inv(D)
 
 
 def generate_local_stiffness(reader):
@@ -97,13 +94,13 @@ def renumber_material_ids (mat_D_in, mat_km_in, g_mat_in):
     keys = list(mat_D_in.keys())
     D_values = list(mat_D_in.values())
     km_values = list(mat_km_in.values())
-    mat_D = zeros((ntype,nst,nst), float64)
-    mat_km = zeros((ntype,ndof,ndof), float64)
+    mat_D = np.zeros((ntype,nst,nst), np.float64)
+    mat_km = np.zeros((ntype,ndof,ndof), np.float64)
     for i in range(ntype):
         mat_D[i] = D_values[i]
         mat_km[i] = km_values[i]
     nels = len(g_mat_in)
-    g_mat = zeros(nels, int)
+    g_mat = np.zeros(nels, int)
     # There might be a faster way to perform the following operation
     for i in range(ntype):
         g_mat += i*(g_mat_in==keys[i])
@@ -130,12 +127,12 @@ def generate_global_stiffness(mat_km, g_mat, g_num, nn, sparse=True, fast=True):
             from .finiteelementfunctions import assembleIJV
             I,J,V = assembleIJV (mat_km, g_mat, g_num)
         else:
-            Ie,Je = numpy.mgrid[0:3,0:3]
+            Ie,Je = np.mgrid[0:3,0:3]
             Ie = Ie.flatten()
             Je = Je.flatten()
-            I = zeros(nels*24**2, int)
-            J = zeros(nels*24**2, int)
-            V = zeros(nels*24**2, float64)
+            I = np.zeros(nels*24**2, int)
+            J = np.zeros(nels*24**2, int)
+            V = np.zeros(nels*24**2, np.float64)
             k = 0
             for e in range(nels):
                 m = g_mat[e]
@@ -147,11 +144,11 @@ def generate_global_stiffness(mat_km, g_mat, g_num, nn, sparse=True, fast=True):
                         J[k:k+9] = Je + 3*jglobal
                         V[k:k+9] = mat_km[m,3*i:3*(i+1),3*j:3*(j+1)].flatten()
                         k += 9
-        K = sparse.coo_matrix((V,(I,J)), shape=(nn*3,nn*3), dtype=float64)
+        K = sparse.coo_matrix((V,(I,J)), shape=(nn*3,nn*3), dtype=np.float64)
     else:
         # Not sparse
         from numpy import linalg
-        K = zeros((nn*3,nn*3), float64)
+        K = np.zeros((nn*3,nn*3), np.float64)
         for e in range(nels):
             m = g_mat[e]
             for i in range(8):
@@ -167,7 +164,7 @@ def generate_global_stiffness(mat_km, g_mat, g_num, nn, sparse=True, fast=True):
 
 def generate_force_terms(nodeid, sense, values, nn):
     indices = 3*nodeid + sense
-    force_terms = zeros(3*nn, float)
+    force_terms = np.zeros(3*nn, float)
     force_terms[indices] = values
     return force_terms
 
@@ -204,10 +201,10 @@ def eliminate_known_values(A, b, indices, values, sparse=True):
     n_known = len(indices)
     assert(n_known == len(values))
     if n_known == 0:
-        return (A, b, arange(n))
+        return (A, b, np.arange(n))
     n_reduced = n - n_known
     # Construct reverse lookup function g
-    g = zeros(n_reduced, int)
+    g = np.zeros(n_reduced, int)
     j = 0
     k = 0
     for i in range(n):
@@ -250,7 +247,7 @@ def shape_der_hexahedron (a, x):
     t = x/a
     tp = 1/a
 
-    deriv = zeros((nod,ndim),float64)
+    deriv = np.zeros((nod,ndim),np.float64)
 
     deriv[0,0] = sp[0] *  s[1] *  s[2]
     deriv[0,1] =  s[0] * sp[1] *  s[2]
@@ -298,7 +295,7 @@ def beemat(deriv):
     nst = 6
     nod = 8
     nodof = 3
-    B = zeros((nst,nod,nodof),float64)
+    B = np.zeros((nst,nod,nodof),np.float64)
     B[0,:,0] = deriv[:,0]
     B[1,:,1] = deriv[:,1]
     B[2,:,2] = deriv[:,2]
@@ -336,7 +333,7 @@ def invar (stress):
 
 def rotate_stress (stress_in, R):
     s = stress_in
-    stress = zeros(6, float64)
+    stress = np.zeros(6, np.float64)
     stress[:3] = (R[:3,0]**2*s[0]
                 + R[:3,1]**2*s[1]
                 + R[:3,2]**2*s[2]
@@ -344,7 +341,7 @@ def rotate_stress (stress_in, R):
                 + 2*R[:3,2]*R[:3,0]*s[4]
                 + 2*R[:3,0]*R[:3,1]*s[5] )
     for i in range(3):
-        j = (arange(3)+i)%3
+        j = (np.arange(3)+i)%3
         stress[3+i] = (
             R[j[1],0]*R[j[2],0]*s[0]
           + R[j[1],1]*R[j[2],1]*s[1]
@@ -356,10 +353,10 @@ def rotate_stress (stress_in, R):
 
 
 def principal_stresses (stress):
-    M = array ([[stress[0], stress[5], stress[4]],
-                [stress[5], stress[1], stress[3]],
-                [stress[4], stress[3], stress[2]]])
-    return sort(linalg.eigvalsh(M))
+    M = np.array ([[stress[0], stress[5], stress[4]],
+                   [stress[5], stress[1], stress[3]],
+                   [stress[4], stress[3], stress[2]]])
+    return np.sort(linalg.eigvalsh(M))
 
 
 def VonMises_yield_function (Y, stress):
@@ -382,12 +379,12 @@ def VonMises_dQ_dsigma (Y, stress):
                 + (sigma[1] - sigma[2])**2
                 + (sigma[2] - sigma[0])**2)/2)
     dQ = VonMises_dQ (Y, 0, dsbar, 0)
-    M2 = array([[ 2, -1, -1, 0, 0, 0],
-                [-1,  2, -1, 0, 0, 0],
-                [-1, -1,  2, 0, 0, 0],
-                [ 0,  0,  0, 6, 0, 0],
-                [ 0,  0,  0, 0, 6, 0],
-                [ 0,  0,  0, 0, 0, 6]], float)
+    M2 = np.array([[ 2, -1, -1, 0, 0, 0],
+                   [-1,  2, -1, 0, 0, 0],
+                   [-1, -1,  2, 0, 0, 0],
+                   [ 0,  0,  0, 6, 0, 0],
+                   [ 0,  0,  0, 0, 6, 0],
+                   [ 0,  0,  0, 0, 0, 6]], float)
     M2 *= 1/3
     return dQ[1]*M2
 
@@ -420,12 +417,12 @@ def MaximumPrincipalStrain_dQ_dsigma (Y, stress):
                 + (sigma[1] - sigma[2])**2
                 + (sigma[2] - sigma[0])**2)/2)
     dQ = MaximumPrincipalStrain_dQ (Y, 0, dsbar, 0)
-    M2 = array([[ 2, -1, -1, 0, 0, 0],
-                [-1,  2, -1, 0, 0, 0],
-                [-1, -1,  2, 0, 0, 0],
-                [ 0,  0,  0, 6, 0, 0],
-                [ 0,  0,  0, 0, 6, 0],
-                [ 0,  0,  0, 0, 0, 6]], float)
+    M2 = np.array([[ 2, -1, -1, 0, 0, 0],
+                   [-1,  2, -1, 0, 0, 0],
+                   [-1, -1,  2, 0, 0, 0],
+                   [ 0,  0,  0, 6, 0, 0],
+                   [ 0,  0,  0, 0, 6, 0],
+                   [ 0,  0,  0, 0, 0, 6]], np.float64)
     M2 *= 1/3
     return dQ[1]*M2
 
@@ -463,34 +460,34 @@ def MohrCoulomb_dQ (c, phi, psi, sigm, dsbar, theta):
 def MohrCoulomb_dQ_dsigma (c, phi, psi, stress):
     sigm, dsbar, theta = invar (stress)
     dQ = MohrCoulomb_dQ (c, phi, psi, sigm, dsbar, theta)
-    M1 = array([[1, 1, 1, 0, 0, 0],
-                [1, 1, 1, 0, 0, 0],
-                [1, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0]], float)
+    M1 = np.array([[1, 1, 1, 0, 0, 0],
+                   [1, 1, 1, 0, 0, 0],
+                   [1, 1, 1, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0]], float)
     M1 *= 1/(3*(stress[0] + stress[1] + stress[2]))
-    M2 = array([[ 2, -1, -1, 0, 0, 0],
-                [-1,  2, -1, 0, 0, 0],
-                [-1, -1,  2, 0, 0, 0],
-                [ 0,  0,  0, 6, 0, 0],
-                [ 0,  0,  0, 0, 6, 0],
-                [ 0,  0,  0, 0, 0, 6]], float)
+    M2 = np.array([[ 2, -1, -1, 0, 0, 0],
+                   [-1,  2, -1, 0, 0, 0],
+                   [-1, -1,  2, 0, 0, 0],
+                   [ 0,  0,  0, 6, 0, 0],
+                   [ 0,  0,  0, 0, 6, 0],
+                   [ 0,  0,  0, 0, 0, 6]], float)
     M2 *= 1/3
-    s = array([(3*stress[0] - stress[1] - stress[2])/3,
-               (3*stress[1] - stress[2] - stress[0])/3,
-               (3*stress[2] - stress[0] - stress[1])/3])
-    M3 = zeros((6,6), float)
-    M3[:3,:3] = array([[s[0], s[2], s[1]],
-                       [s[2], s[1], s[0]],
-                       [s[1], s[0], s[2]]])
-    M3[:3,3:6] = array([[-2*stress[3],    stress[4],    stress[5]],
-                        [   stress[3], -2*stress[4],    stress[5]],
-                        [   stress[3],    stress[4], -2*stress[5]]])
-    M3[3:6,:3] = transpose(M3[:3,3:6])
-    M3[3:6,3:6] = 3*array([[    -s[0], stress[2], stress[1]],
-                           [stress[2],     -s[1], stress[0]],
-                           [stress[1], stress[0],     -s[2]]])
+    s = np.array([(3*stress[0] - stress[1] - stress[2])/3,
+                  (3*stress[1] - stress[2] - stress[0])/3,
+                  (3*stress[2] - stress[0] - stress[1])/3])
+    M3 = np.zeros((6,6), float)
+    M3[:3,:3] = np.array([[s[0], s[2], s[1]],
+                          [s[2], s[1], s[0]],
+                          [s[1], s[0], s[2]]])
+    M3[:3,3:6] = np.array([[-2*stress[3],    stress[4],    stress[5]],
+                           [   stress[3], -2*stress[4],    stress[5]],
+                           [   stress[3],    stress[4], -2*stress[5]]])
+    M3[3:6,:3] = np.transpose(M3[:3,3:6])
+    M3[3:6,3:6] = 3*np.array([[    -s[0], stress[2], stress[1]],
+                              [stress[2],     -s[1], stress[0]],
+                              [stress[1], stress[0],     -s[2]]])
     M3 *= 1/3
     return dQ[0]*M1 + dQ[1]*M2 + dQ[2]*M3
 
@@ -509,16 +506,16 @@ def calculate_strain (x, g_g, a):
     B = beemat(deriv)
     x_all_local = x[g_g.flatten()]
     x_all_local.shape = (nels,nod*ndim)
-    strain = numpy.tensordot(x_all_local, B, axes=([1],[1]))
+    strain = np.tensordot(x_all_local, B, axes=([1],[1]))
     return strain
 
 
 def calculate_stress (strain, mat_D, g_mat):
     nst = 6
     nels = g_mat.shape[0]
-    stress = zeros((nels,nst), float64)
+    stress = np.zeros((nels,nst), np.float64)
     for iel in range(nels):
-        stress[iel] = dot(mat_D[g_mat[iel]], strain[iel])
+        stress[iel] = np.dot(mat_D[g_mat[iel]], strain[iel])
     return stress
     
 
@@ -528,24 +525,24 @@ def calculate_body_load (strain, mat_D, g_mat, g_num, a, nn):
     nels = g_mat.shape[0]
     deriv = shape_der_hexahedron(a, a/2)
     B = beemat(deriv)
-    body_load = zeros((nn,ndim), float64)
+    body_load = np.zeros((nn,ndim), np.float64)
     for iel in range(nels):
-        eload = product(a) * dot(transpose(B),
-                  dot(mat_D[g_mat[iel]], strain[iel]))
+        eload = np.prod(a) * np.dot(np.transpose(B),
+                  np.dot(mat_D[g_mat[iel]], strain[iel]))
         body_load[g_num[iel,:],:] += eload.reshape((nod,ndim))
     return body_load
 
 
 def calculate_yield_function (stress, material_table, material_definitions, id_key, g_mat):
     nels = g_mat.size
-    f = zeros(nels, float64)
+    f = np.zeros(nels, np.float64)
     # Step through each material; treat nonlinear ones
     for id,name in material_table.items():
         material = material_definitions[name]
         if material['Type'] == "VonMisesIsotropic":
             Y = material['Y']
             mask = (g_mat != id_key[id])
-            mat_list = numpy.ma.masked_array(arange(nels), mask=mask).compressed()
+            mat_list = np.ma.masked_array(np.arange(nels), mask=mask).compressed()
             for iel in mat_list:
                 f[iel] = VonMises_yield_function (Y, stress[iel])
         elif material['Type'] == "MaximumPrincipalStrainIsotropic":
@@ -554,14 +551,14 @@ def calculate_yield_function (stress, material_table, material_definitions, id_k
             epsilon_YT = material['epsilon_YT']
             epsilon_YC = material['epsilon_YC']
             mask = (g_mat != id_key[id])
-            mat_list = numpy.ma.masked_array(arange(nels), mask=mask).compressed()
+            mat_list = np.ma.masked_array(np.arange(nels), mask=mask).compressed()
             for iel in mat_list:
                 f[iel] = MaximumPrincipalStrain_yield_function (E, nu, epsilon_YT, epsilon_YC, stress[iel])
         elif material['Type'] == "MohrCoulombIsotropic":
             c = material['c']
             phi = material['phi']
             mask = (g_mat != id_key[id])
-            mat_list = numpy.ma.masked_array(arange(nels), mask=mask).compressed()
+            mat_list = np.ma.masked_array(np.arange(nels), mask=mask).compressed()
             for iel in mat_list:
                 f[iel] = MohrCoulomb_yield_function (c, phi, stress[iel])
     return f
@@ -572,5 +569,5 @@ def calculate_forces (K, x, sparse=True):
         # Note: The * operator for sparse matrices is matrix multiplication
         b = K * x.flatten()
     else:
-        b = dot (K, x.flatten())
+        b = np.dot (K, x.flatten())
     return b
