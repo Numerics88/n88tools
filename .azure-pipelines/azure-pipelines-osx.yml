@@ -5,18 +5,15 @@ jobs:
     vmImage: 'macOS-latest'
   strategy:
     matrix:
-      Python27:
-        python.version: '2.7'
-        numpy.version: '1.16'
       Python36:
         python.version: '3.6'
-        numpy.version: '1.16'
+        numpy.version: '1.18'
       Python37:
         python.version: '3.7'
-        numpy.version: '1.16'
+        numpy.version: '1.18'
       Python38:
         python.version: '3.8'
-        numpy.version: '1.16'
+        numpy.version: '1.18'
   steps:
   - bash: |
       echo "##vso[task.prependpath]$CONDA/bin"
