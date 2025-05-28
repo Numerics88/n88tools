@@ -9,9 +9,3 @@ cxx_compiler:
 channels:
   - friedchickean
   - conda-forge
-# macos_min_version:             # [osx]
-#   - 10.9                       # [osx]
-# MACOSX_DEPLOYMENT_TARGET:      # [osx]
-#   - 10.9                       # [osx]
-# CONDA_BUILD_SYSROOT:
-#   - /opt/MacOSX10.9.sdk        # [osx]
