@@ -30,6 +30,9 @@ requirements:
     - python {{ python }}
     - setuptools
     - vtkbone
+    - aimio
+    - pqctio
+    - n88util
     - numpy x.x
     - scipy
     - netcdf4
@@ -42,6 +45,9 @@ requirements:
   run:
     - python {{ python }}
     - vtkbone
+    - aimio
+    - pqctio
+    - n88util
     - numpy x.x
     - scipy
     - netcdf4
