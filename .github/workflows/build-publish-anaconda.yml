@@ -26,16 +26,13 @@ jobs:
               ref: kean/ci
               fetch-depth: 0
 
-          - name: Switch XCode version for macos-13
+          - name: Download 11.3 sdk for macos-13
             if: startsWith(matrix.os, 'macos-13')
             run: |
-              sudo xcode-select -s /Applications/Xcode_14.1.app/Contents/Developer
-              xcode-select -p
-              xcodebuild -showsdks
-              xcodebuild -version
-              echo "CONDA_BUILD_SYSROOT=/Applications/Xcode_14.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" >> $GITHUB_ENV
-              echo "CONDA_BUILD_SYSROOT:" >> ./conda-recipe/n88tools/conda_build_config.yaml
-              echo "  - /Applications/Xcode_14.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" >> ./conda-recipe/n88tools/conda_build_config.yaml
+              sudo mkdir -p /opt/
+              sudo chown -R $USER /opt/
+              curl  -L https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz -o MacOSX11.3.sdk.tar.xz
+              tar -xJf MacOSX11.3.sdk.tar.xz -C /opt/
             
           - name: Build and publish
             uses: openalea/action-build-publish-anaconda@v0.1.5
