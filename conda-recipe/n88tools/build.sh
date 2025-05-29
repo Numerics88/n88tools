@@ -5,8 +5,8 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
 		# Nothing to do
     ;;
   darwin*)
-		export CFLAGS="-isysroot /opt/MacOSX11.3.sdk -mmacosx-version-min=11.3 ${CFLAGS}"
-		export CXXFLAGS="-isysroot /opt/MacOSX11.3.sdk -mmacosx-version-min=11.3 ${CXXFLAGS}"
+		export CFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} ${CFLAGS}"
+		export CXXFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} ${CXXFLAGS}"
     ;;
   *)
 esac
