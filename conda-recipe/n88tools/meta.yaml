@@ -34,8 +34,6 @@ requirements:
     - pqctio
     - n88util
     - numpy >=1.24.3,<=1.26.4
-    # tapi 1000 is causing issues on macos-13, so we use >=1300
-    - tapi >=1300 # [osx]
     - scipy
     - netcdf4
   host:
