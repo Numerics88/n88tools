@@ -30,19 +30,25 @@ requirements:
     - python {{ python }}
     - setuptools
     - vtkbone
-    - numpy x.x
+    - aimio
+    - pqctio
+    - n88util
+    - numpy >=1.24.3,<=1.26.4
     - scipy
     - netcdf4
   host:
     - python {{ python }}
     - vtkbone
-    - numpy x.x
+    - numpy >=1.24.3,<=1.26.4
     - scipy
     - netcdf4
   run:
     - python {{ python }}
     - vtkbone
-    - numpy x.x
+    - aimio
+    - pqctio
+    - n88util
+    - numpy >=1.24.3,<=1.26.4
     - scipy
     - netcdf4
 
