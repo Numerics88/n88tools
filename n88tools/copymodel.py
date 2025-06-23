@@ -4,7 +4,7 @@ copymodel.py
 A tool to copy and convert finite element model formats. Also supports
 compression.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """

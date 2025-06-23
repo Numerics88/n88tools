@@ -3,7 +3,7 @@ pistoia.py
 
 Generate tables of standard post-processing quantities.
 
-Copyright (c) 2013-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 All rights reserved.
 http://www.numerics88.com/
 """

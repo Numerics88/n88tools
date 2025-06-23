@@ -3,7 +3,7 @@ modelinfo.py
 
 A tool to print summary data about an n88model file.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """

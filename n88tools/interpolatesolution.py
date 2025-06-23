@@ -4,7 +4,7 @@ interpolatesolution.py
 A tool to reduce the size of finite element models so that an
 approximate solution can be obtained quickly and with less memory.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """
