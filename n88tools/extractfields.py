@@ -4,7 +4,7 @@ extractfields.py
 A tool to extract field data from solutions in n88model files and write
 the data in text format.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """

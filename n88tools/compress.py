@@ -3,7 +3,7 @@ compress.py
 
 A tool to compress n88model files.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """

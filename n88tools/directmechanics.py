@@ -4,7 +4,7 @@ directmechanics.py
 A tool to perform direct mechanics calculations using n88solver to evaluate
 mechanics deformation.
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """

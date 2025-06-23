@@ -1,7 +1,6 @@
 /*
- Copyright (C) 2011-2016 Numerics88 Solutions Ltd.
+ Copyright (c) 2010-2025, Numerics88 Solutions.
  All rights reserved.
- info@numerics88.com
 */
 
 #ifndef N88UTIL_vector_hpp_INCLUDED

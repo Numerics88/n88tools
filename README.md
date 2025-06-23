@@ -36,10 +36,8 @@ Note that the SDK version - `MacOSX10.15.sdk` - may be different on your machine
 
 ## Authors and Contributors
 
-n88tools is maintained and supported by Numerics88
-Solutions Ltd (http://numerics88.com). It was originally developed
-by Eric Nodwell (eric.nodwell@numerics88.com) and Steven K. Boyd
-(https://bonelab.ucalgary.ca/).
+n88tools is maintained and supported by Numerics88 Solutions (http://numerics88.com). 
+It was originally developed by Eric Nodwell and Steven K. Boyd (skboyd@ucalgary.ca).
 
 ## Licence
 

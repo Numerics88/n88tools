@@ -49,9 +49,9 @@ class TestModelInfoRegression(unittest.TestCase):
         '''History output correct'''
         key = 'History:'
         expected = '''
-2019-Dec-12 14:05:47 Model created by n88modelgenerator version 8.0-alpha4
-2019-Dec-12 14:06:51 Solved by n88solver_slt 8.0-alpha4
-2019-Dec-17 15:04:06 Processed by n88derivedfields 8.0-alpha4
+2019-Dec-12 14:05:47 Model created by n88modelgenerator version 9.1
+2019-Dec-12 14:06:51 Solved by n88solver_slt 9.1
+2019-Dec-17 15:04:06 Processed by n88derivedfields 9.1
 '''
         
         self.assertTrue(key in self.tables)
@@ -63,9 +63,9 @@ class TestModelInfoRegression(unittest.TestCase):
         key = 'Log:'
         expected = '''
 2019-Dec-12 14:05:47
-n88modelgenerator Version 8.0-alpha4
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
-Licensed to Bryce Besler, laptop; lic. no. 167
+n88modelgenerator Version 9.1
+Copyright (c) 2010-2025, Numerics88 Solutions.
+Licensed to Johnny Depp, laptop; lic. no. 167
 
 input_file   = test25a.aim
 output_file  = test25a_uniaxial.n88model
@@ -98,8 +98,8 @@ poissons_ratio                = 0.3
           top_displacement : 278 nodes
 
 2019-Dec-12 14:06:51
-n88solver_slt version 8.0-alpha4
-Copyright (c) 2010-2015, Numerics88 Solutions Ltd.
+n88solver_slt version 9.1
+Copyright (c) 2010-2025, Numerics88 Solutions.
 Licensed to Bryce Besler, laptop; lic. no. 167
 Problem:
   active solution       = (none)
@@ -121,8 +121,8 @@ Peak data allocation of supervisory thread: 1.08 MiB
 Peak data allocation, sum over worker threads : 1.99 MiB
 
 2019-Dec-17 15:04:06
-n88derivedfields version 8.0-alpha4
-Copyright (c) 2010-2015, Numerics88 Solutions Ltd.
+n88derivedfields version 9.1
+Copyright (c) 2010-2025, Numerics88 Solutions.
 Licensed to Bryce Besler, laptop; lic. no. 167
 Problem:
   active solution       = Solution1

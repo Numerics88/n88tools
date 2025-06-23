@@ -1,7 +1,7 @@
 """
 N88ModelReader
 
-Copyright (c) 2010-2016, Numerics88 Solutions Ltd.
+Copyright (c) 2010-2025, Numerics88 Solutions.
 http://www.numerics88.com/
 See LICENSE for details.
 """

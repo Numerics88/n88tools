@@ -5,7 +5,7 @@ import numpy
 setup (
 
     name = "n88tools",
-    version = "9.0.0",
+    version = "9.1.0",
     packages = ['n88tools'],
     ext_modules = [Extension('n88tools.finiteelementfunctions',
                              include_dirs = [numpy.get_include()],
@@ -34,7 +34,7 @@ setup (
     zip_safe = False,  # force egg to unzip on installation
 
     author = "Eric Nodwell",
-    author_email = "eric.nodwell@numerics88.com",
+    author_email = "skboyd@ucalgary.ca",
     description = "Various useful tools for use with n88model finite element models.",
     url = "http://numerics88.com/",
 
