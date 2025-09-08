@@ -103,8 +103,10 @@ def pistoia():
     elementValues = activeSolution.groups["ElementValues"]
     materialTable = activePart.groups["MaterialTable"]
     materialDefinitions = root.groups["MaterialDefinitions"]
-    nodeSetsGroup = root.groups["Sets"].groups["NodeSets"]
-    elementSetsGroup = root.groups["Sets"].groups["ElementSets"]
+    
+    # 09/2025: Not used and causing erorrs if Sets group not present in Version 10
+    # nodeSetsGroup = root.groups["Sets"].groups["NodeSets"]
+    # elementSetsGroup = root.groups["Sets"].groups["ElementSets"]
 
     # Determine some constants to do with array sizes
 
