@@ -74,14 +74,14 @@ def pistoia():
 
     args = parser.parse_args()
 
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         if len(args.rotation_center) != 3:
             raise N88ReportedError ("ERROR: rotation_center must be a triplet of values.")
 
     # For now this is hard-wired.
     args.twist_threshold = 1E-6
 
-    if args.output_file == None:
+    if args.output_file is None:
         out = sys.stdout
     else:
         out = open (args.output_file, "wt")
@@ -124,7 +124,7 @@ def pistoia():
     sizeOfMaterialTable = materialTable.variables["ID"].shape[0]
     nst = 6
 
-    if args.rotation_center == None:
+    if args.rotation_center is None:
         try:
             args.rotation_center = activeProblem.RotationCenter
         except:
@@ -267,12 +267,12 @@ def pistoia():
     # Generate a mask
     # Note that the mask is True (or value 1) for elements that are to be excluded.
 
-    if args.exclude != None:
+    if args.exclude is not None:
         ids = numpy.unique(numpy.fromstring(args.exclude, sep=",", dtype=int))
         mask = zeros((numberOfElements,), bool)
         for i in ids:
             mask += (elementMaterials == i)
-    elif args.include != None:
+    elif args.include is not None:
         ids = numpy.unique(numpy.fromstring(args.include, sep=",", dtype=int))
         mask = ones((numberOfElements,), bool)
         for i in ids:
@@ -296,7 +296,7 @@ def pistoia():
     set_data = forces[set_indices]
     rf_ns1 = numpy.sum(set_data, axis=0)
 
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         
         # Calculate average angular rotation on specified node set.
         p = zeros (activePart.variables["NodeCoordinates"].shape, float64)
@@ -328,7 +328,7 @@ def pistoia():
 
     f = rf_ns1
     u = u_ns1
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         t = torque_ns1
         rot = rot_ns1
 
@@ -347,18 +347,18 @@ def pistoia():
         modulus[indices] = modulus_value
     sed = zeros (elementValues.variables["StrainEnergyDensity"].shape, float64)
     sed[:] = elementValues.variables["StrainEnergyDensity"][:]
-    if mask != None:
+    if mask is not None:
         sed = numpy.ma.MaskedArray (sed, mask)
         modulus = numpy.ma.MaskedArray (modulus, mask)
     ees = sqrt(2*sed/modulus)
     del sed
-    if mask == None:
+    if mask is None:
         numberOfSelectedElements = numberOfElements
     else:
         numberOfSelectedElements = ees.count()
     if numberOfSelectedElements == 0:
         raise N88ReportedError ("ERROR: No elements in selection.")
-    if mask == None:
+    if mask is None:
         sort_indices = argsort (ees)
     else:
         sort_indices = ees.argsort(fill_value=inf)[:numberOfSelectedElements]
@@ -367,7 +367,7 @@ def pistoia():
     ees_at_crit_vol = ees[el]
     fixed_factor = fixed_critical_ees / ees_at_crit_vol
     failure_load = f * fixed_factor
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         torsional_failure_load = t * fixed_factor
     # Note that the use of numpy.float64 is to ensure IEEE math
     # (i.e. result=NAN on divide by zero instead of exception)
@@ -375,7 +375,7 @@ def pistoia():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")    
         stiffness = f/u
-        if args.rotation_center != None:
+        if args.rotation_center is not None:
             torsional_stiffness = t/rot
 
     table_count = 0
@@ -383,7 +383,7 @@ def pistoia():
     out.write ("""Pistoia Criterion for Energy-Equivalent-Strain (EES)
     (*) Results valid for linear, isotropic model only.
     """)
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         out.write ("   (*) Warning: Torsion failure load not validated. Caution!\n")
 
     out.write (subtable_delimiter)
@@ -397,7 +397,7 @@ def pistoia():
     triple_entry_text = "%%-%ds" % (width-3*col_width) + ("%%%ds" % col_width)*3 + "\n"
     out.write (float_entry % ("Factor (from table):", fixed_factor))
     out.write (triple_entry % (("Failure load (RF * factor):",) + tuple(failure_load)))
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         out.write (triple_entry % (("Torsional failure load (T * factor):",) + tuple(torsional_failure_load)))
     out.write (section_delimiter)
     out.write ("Stiffness:\n")
@@ -406,7 +406,7 @@ def pistoia():
     out.write (triple_entry % (("RF (node set 1):",) + tuple(f)))
     out.write (triple_entry % (("U (node set 1):",) + tuple(u)))
     out.write (triple_entry % (("Axial stiffness:",) + tuple(stiffness)))
-    if args.rotation_center != None:
+    if args.rotation_center is not None:
         out.write (triple_entry % (("T (node set 1):",) + tuple(t)))
         out.write (triple_entry % (("Rot (node set 1) [rad]:",) + tuple(rot)))
         out.write (triple_entry % (("Torsional stiffness:",) + tuple(torsional_stiffness)))
