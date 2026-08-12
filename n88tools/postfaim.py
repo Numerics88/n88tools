@@ -11,6 +11,7 @@ See LICENSE for details.
 from __future__ import division
 import sys
 from .N88ReportedError import N88ReportedError
+from .interpolation import smooth_element_field
 import numpy
 from numpy.core import *
 
@@ -61,6 +62,17 @@ def postfaim():
     The default is read from the n88model. If not specified, either on the
     command line or in the n88model file, no angular quantities will be
     calculated.""")
+
+    parser.add_argument ("--interpol_option", type=int, choices=(0,1), default=0,
+        help="""Interpolation of the element fields. Matches the option of the
+    same name in Scanco Medical's fe_post.
+    0: use the element values as solved (default).
+    1: extrapolate the element values to the element nodes, average between
+       neighbouring elements, then interpolate back to the element centres,
+       giving a somewhat smoother distribution. This applies to the strain,
+       plastic strain, stress, strain energy density and von Mises stress
+       tables. Tables of nodal quantities are unaffected.
+    (default: %(default)s)""")
 
     parser.add_argument ("model_file")
 
@@ -247,6 +259,22 @@ def postfaim():
         return values
 
 
+    def Interpolate (data):
+        """Smooth an element field, if --interpol_option asks for it.
+
+        Applied to the reported quantity itself. Von Mises stress and strain
+        energy density are therefore smoothed after they have been derived,
+        which is what fe_post does and is not the same as smoothing the
+        underlying stress and strain tensors, since neither derivation is
+        linear.
+        """
+        if args.interpol_option == 0:
+            return data
+        return smooth_element_field (
+            data, hexahedrons.variables["NodeNumbers"], numberOfNodes,
+            one_based=True, nodes_per_element=numberOfNodesPerElement)
+
+
     # ------------------------------------------------------------------------
     # Output functions
 
@@ -365,6 +393,7 @@ def postfaim():
           + integer_entry % ("Number of nodes:", numberOfNodes)
           + integer_entry % ("Number of nodes per element:", numberOfNodesPerElement)
           + integer_entry % ("Dimension of problem:", dimensionality))
+        out.write (integer_entry % ("Interpolation option:", args.interpol_option))
         out.write (table_delimiter)
 
 
@@ -444,6 +473,7 @@ def postfaim():
             stress[:] = elementValues.variables["Stress"][:]
         except KeyError:
             return
+        stress = Interpolate (stress)
         BeginTable ("Stress")
         stats = ["average", "std_dev", "minimum", "maximum", "skewness", "kurtosis",
                  "median", "perc05", "perc25", "perc75", "perc95"]
@@ -465,6 +495,7 @@ def postfaim():
             strain[:] = elementValues.variables["Strain"][:]
         except KeyError:
             return
+        strain = Interpolate (strain)
         BeginTable ("Strain")
         stats = ["average", "std_dev", "minimum", "maximum", "skewness", "kurtosis",
                  "median", "perc05", "perc25", "perc75", "perc95"]
@@ -486,6 +517,7 @@ def postfaim():
             plastic_strain[:] = elementValues.variables["PlasticStrain"][:]
         except KeyError:
             return
+        plastic_strain = Interpolate (plastic_strain)
         BeginTable ("Plastic Strain")
         stats = ["average", "std_dev", "minimum", "maximum", "skewness", "kurtosis",
                  "median", "perc05", "perc25", "perc75", "perc95"]
@@ -507,6 +539,7 @@ def postfaim():
             sed[:] = elementValues.variables["StrainEnergyDensity"][:]
         except KeyError:
             return
+        sed = Interpolate (sed)
         BeginTable ("Strain Energy Density")
         stats = ["average", "std_dev", "minimum", "maximum", "skewness", "kurtosis",
                  "median", "perc05", "perc25", "perc75", "perc95"]
@@ -527,6 +560,7 @@ def postfaim():
             vm_stress[:] = elementValues.variables["VonMisesStress"][:]
         except KeyError:
             return
+        vm_stress = Interpolate (vm_stress)
         BeginTable ("Von Mises Stress")
         stats = ["average", "std_dev", "minimum", "maximum", "skewness", "kurtosis",
                  "median", "perc05", "perc25", "perc75", "perc95"]
