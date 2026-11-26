@@ -11,6 +11,7 @@ http://www.numerics88.com/
 from __future__ import division
 import sys
 from .N88ReportedError import N88ReportedError
+from .interpolation import smooth_element_field
 import numpy
 from numpy.core import *
 
@@ -69,6 +70,17 @@ def pistoia():
 
     parser.add_argument ("--critical_strain", "-s", type=float, default=0.007,
         help="Specify the fixed critical strain (default: %(default)s)")
+
+    parser.add_argument ("--interpol_option", type=int, choices=(0,1), default=0,
+        help="""Interpolation of the energy-equivalent strain field. Matches the
+    option of the same name in Scanco Medical's fe_post.
+    0: use the element values as solved (default).
+    1: extrapolate the element values to the element nodes, average between
+       neighbouring elements, then interpolate back to the element centres,
+       giving a somewhat smoother distribution. Note that the Pistoia criterion
+       keys off an upper percentile of EES, so smoothing lowers that percentile
+       and correspondingly raises the estimated failure load.
+    (default: %(default)s)""")
 
     parser.add_argument ("model_file")
 
@@ -347,11 +359,18 @@ def pistoia():
         modulus[indices] = modulus_value
     sed = zeros (elementValues.variables["StrainEnergyDensity"].shape, float64)
     sed[:] = elementValues.variables["StrainEnergyDensity"][:]
-    if mask is not None:
-        sed = numpy.ma.MaskedArray (sed, mask)
-        modulus = numpy.ma.MaskedArray (modulus, mask)
     ees = sqrt(2*sed/modulus)
     del sed
+    if args.interpol_option == 1:
+        # Smooth the complete field, before any selection is applied: which
+        # elements neighbour which is a property of the mesh, and does not
+        # depend on the material IDs that --include or --exclude happen to
+        # select. Selecting first would treat unselected neighbours as absent.
+        ees = smooth_element_field (
+            ees, hexahedrons.variables["NodeNumbers"], numberOfNodes,
+            one_based=True, nodes_per_element=numberOfNodesPerElement)
+    if mask is not None:
+        ees = numpy.ma.MaskedArray (ees, mask)
     if mask is None:
         numberOfSelectedElements = numberOfElements
     else:
@@ -387,6 +406,7 @@ def pistoia():
         out.write ("   (*) Warning: Torsion failure load not validated. Caution!\n")
 
     out.write (subtable_delimiter)
+    out.write (integer_entry % ("Interpolation option:", args.interpol_option))
     float_entry = any_entry + ".3f\n"
     out.write (float_entry % ("Critical volume (%):", fixed_critical_volume))
     float_entry = "%%-40s%%%d" % (width-40) + ".4E\n"
